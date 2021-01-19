@@ -44,11 +44,11 @@
         >
       </el-form>
       <!-- 添加用户按钮 -->
-      <el-button class="addBtn" @click="this.addUservisible = true"
-        >添加用户</el-button
-      >
+      <el-button class="addBtn" @click="addDialog">添加用户</el-button>
       <!-- 导入用户按钮 -->
-      <el-button style="margin-left:40px" class="addBtn">导入用户</el-button>
+      <el-button style="margin-left:40px" class="addBtn" @click="importDialog"
+        >导入用户</el-button
+      >
       <!-- 表格信息 -->
       <el-table
         v-loading="loading"
@@ -58,11 +58,13 @@
         border
         stripe
         style="width: 100%"
+        :default-sort="{ prop: 'date', order: 'descending' }"
       >
-        <el-table-column prop="datee" label="序号"> </el-table-column>
+        <el-table-column sortable prop="datee" label="序号"> </el-table-column>
         <el-table-column prop="namee" label="用户姓名"> </el-table-column>
         <el-table-column prop="addresse" label="联系电话"> </el-table-column>
-        <el-table-column prop="oute" label="添加"> </el-table-column>
+        <el-table-column sortable prop="oute" label="添加时间">
+        </el-table-column>
         <el-table-column label="操作" width="180px">
           <template slot-scope="scope">
             <!--修改按钮-->
@@ -76,7 +78,7 @@
                 type="primary"
                 icon="el-icon-edit"
                 size="mini"
-                @click="showEditDialog(scope.row.id)"
+                @click="editDialog(scope.row.id)"
               ></el-button>
             </el-tooltip>
             <!--删除按钮-->
@@ -91,7 +93,7 @@
                 type="danger"
                 icon="el-icon-delete"
                 size="mini"
-                @click="removeUserByid(scope.row.id)"
+                @click="deleteDialog(scope.row.id)"
               ></el-button>
             </el-tooltip>
           </template>
@@ -109,14 +111,31 @@
       </el-pagination>
     </el-card>
     <!-- 添加用户弹框 -->
-    <addUser />
+    <addUser :addDialog="addUservisible" @closeAdd="closeAdd" />
+    <!-- 导入用户弹框 -->
+    <importUser :importDialog="importUservisible" @closeImport="closeImport" />
+    <!-- 编辑用户弹框 -->
+    <editUser
+      :editId="editId"
+      :addDialog="editUservisible"
+      @closeEdit="closeEdit"
+    />
+    <!-- 用户删除弹框 -->
+    <deleteUser
+      :deleteId="deleteId"
+      :deleteDialog="deleteUservisible"
+      @closeDelete="closeDelete"
+    />
   </div>
 </template>
 
 <script>
-import addUser from "@/components/addUser.vue";
+import addUser from "@/components/userDialog/addUser.vue";
+import deleteUser from "@/components/userDialog/deleteUser.vue";
+import editUser from "@/components/userDialog/addUser.vue";
+import importUser from "@/components/userDialog/importUser.vue";
 export default {
-  components: { addUser },
+  components: { addUser, importUser, editUser, deleteUser },
   data() {
     return {
       visible: false,
@@ -124,10 +143,41 @@ export default {
       select: "",
       userList: [],
       loading: true,
-      addUservisible: false
+      addUservisible: false,
+      importUservisible: false,
+      editUservisible: false,
+      deleteUservisible: false,
+      editId: "",
+      deleteId: ""
     };
   },
   methods: {
+    deleteDialog(val) {
+      this.deleteUservisible = true;
+      this.deleteId = val;
+    },
+    closeDelete(val) {
+      this.deleteUservisible = val;
+    },
+    importDialog() {
+      this.importUservisible = true;
+    },
+    editDialog(val) {
+      this.editUservisible = true;
+      this.editId = val;
+    },
+    closeEdit(val) {
+      this.editUservisible = val;
+    },
+    closeImport(val) {
+      this.importUservisible = val;
+    },
+    addDialog() {
+      this.addUservisible = true;
+    },
+    closeAdd(val) {
+      this.addUservisible = val;
+    },
     reset() {
       this.searchTitle = "";
       this.select = "";

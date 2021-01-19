@@ -63,9 +63,11 @@
         border
         stripe
         style="width: 100%"
+        :default-sort="{ prop: 'date', order: 'descending' }"
       >
         <el-table-column prop="datee" label="用户姓名"> </el-table-column>
-        <el-table-column prop="namee" label="考勤时间"> </el-table-column>
+        <el-table-column sortable prop="namee" label="考勤时间">
+        </el-table-column>
         <el-table-column prop="addresse" label="签到状态"> </el-table-column>
         <el-table-column prop="oute" label="签退状态"> </el-table-column>
       </el-table>
@@ -114,8 +116,8 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="DialogAdd = false">取 消</el-button>
         <el-button type="primary" @click="DialogAdd = false">确 定</el-button>
+        <el-button @click="DialogAdd = false">取 消</el-button>
       </span>
     </el-dialog>
   </div>

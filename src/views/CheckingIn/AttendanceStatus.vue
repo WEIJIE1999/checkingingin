@@ -29,7 +29,9 @@
           <el-button type="warning" @click="reset">重置</el-button>
         </el-form-item>
       </el-form>
-      <el-button size="large" id="searchBtn">添加状态</el-button>
+      <el-button size="large" id="searchBtn" @click="addStatus"
+        >添加状态</el-button
+      >
       <!-- 表格信息 -->
       <el-table
         v-loading="loading"
@@ -39,11 +41,13 @@
         border
         stripe
         style="width: 100%"
+        :default-sort="{ prop: 'date', order: 'descending' }"
       >
-        <el-table-column prop="datee" label="序号"> </el-table-column>
+        <el-table-column sortable prop="datee" label="序号"> </el-table-column>
         <el-table-column prop="namee" label="状态名称"> </el-table-column>
         <el-table-column prop="addresse" label="规则设置"> </el-table-column>
-        <el-table-column prop="oute" label="添加时间"> </el-table-column>
+        <el-table-column sortable prop="oute" label="添加时间">
+        </el-table-column>
         <el-table-column label="操作" width="180px">
           <template slot-scope="scope">
             <!--删除按钮-->
@@ -58,12 +62,13 @@
                 type="danger"
                 icon="el-icon-delete"
                 size="mini"
-                @click="removeUserByid(scope.row.id)"
+                @click="deleteStatus(scope.row.id)"
               ></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
+      <!-- 分页 -->
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -75,17 +80,46 @@
       >
       </el-pagination>
     </el-card>
+    <!-- 添加状态弹框 -->
+    <addStatus :addDialog="addStatusVisible" @closeAdd="closeAdd" />
+    <!-- 删除弹框 -->
+    <deleteStatus
+      :deleteDialog="deleteStatusVisible"
+      :deleteId="deleteId"
+      @closeDelete="closeDelete"
+    />
   </div>
 </template>
 
 <script>
+import addStatus from "@/components/statusDialog/addStatus.vue";
+import deleteStatus from "@/components/statusDialog/deleteStatus.vue";
 export default {
+  components: { addStatus, deleteStatus },
   data() {
     return {
       status: "",
       loading: true,
-      statusList: []
+      statusList: [],
+      addStatusVisible: false,
+      deleteStatusVisible: false,
+      deleteId: ""
     };
+  },
+  methods: {
+    deleteStatus(val) {
+      this.deleteStatusVisible = true;
+      this.deleteId = val;
+    },
+    closeDelete(val) {
+      this.deleteStatusVisible = val;
+    },
+    addStatus() {
+      this.addStatusVisible = true;
+    },
+    closeAdd(val) {
+      this.addStatusVisible = val;
+    }
   }
 };
 </script>
