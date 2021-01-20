@@ -11,11 +11,11 @@
       :rules="addRules"
       ref="addRef"
     >
-      <el-form-item label="用户姓名:" prop="roleName">
-        <el-input v-model="addUser.roleName"></el-input>
+      <el-form-item label="用户姓名:" prop="name">
+        <el-input v-model="addUser.name"></el-input>
       </el-form-item>
-      <el-form-item label="手机号码:" prop="phone">
-        <el-input v-model="addUser.phone"></el-input>
+      <el-form-item label="手机号码:" prop="phoneNumber">
+        <el-input v-model="addUser.phoneNumber"></el-input>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -38,15 +38,15 @@ export default {
       cb(new Error("请输入合法的手机号"));
     };
     return {
+      // 添加表单
       addUser: {
-        roleName: "",
-        phone: ""
+        name: "",
+        phoneNumber: ""
       },
+      //   添加规则
       addRules: {
-        roleName: [
-          { required: true, message: "请输入活动名称", trigger: "blur" }
-        ],
-        phone: [
+        name: [{ required: true, message: "请输入活动名称", trigger: "blur" }],
+        phoneNumber: [
           { required: true, message: "请选择活动区域", trigger: "change" },
           {
             validator: checkMobile,
@@ -57,10 +57,12 @@ export default {
     };
   },
   methods: {
+    //   重置表单关闭弹框
     handleClose() {
       this.$refs.addRef.resetFields();
-      this.$emit("closeAdd", false);
+      this.$emit("clickClose", 1);
     },
+    // 添加功能
     addBtn() {}
   }
 };

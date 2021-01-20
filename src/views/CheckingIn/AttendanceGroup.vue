@@ -1,6 +1,8 @@
 <template>
   <div>
+    <!-- 卡片视图 -->
     <el-card>
+      <!-- 面包屑导航 -->
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item
           ><span class="breadcurmbRight">当前位置:</span>
@@ -70,11 +72,11 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage4"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
+        :current-page="queryInfo.pageNum"
+        :page-sizes="[5, 10, 15, 20]"
+        :page-size="queryInfo.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="400"
+        :total="total"
       >
       </el-pagination>
     </el-card>
@@ -88,17 +90,45 @@ export default {
   components: { addGroup },
   data() {
     return {
+      // 数据表格是否操作完成
       loading: true,
-      addDialog: false
+      //   控制添加弹框出现
+      addDialog: false,
+      // 获取用户列表的参数对象
+      queryInfo: {
+        // 当前的页数
+        pageNum: 1,
+        pageSize: 5
+      },
+      //   数据总条数
+      total: ""
     };
   },
+  //   进入页面初始化数据
+  mounted() {
+    this.getGroupList();
+  },
   methods: {
+    // 监听 pagesize改变的事件
+    handleSizeChange(newSize) {
+      this.queryInfo.pageSize = newSize;
+      this.getGroupList();
+    },
+    // 监听页面值改变的事件
+    handleCurrentChange(newPage) {
+      this.queryInfo.pageNum = newPage;
+      this.this.getGroupList();
+    },
+    // 点击弹出添加弹框
     addGroup() {
       this.addDialog = true;
     },
+    // 关闭添加弹框
     closeAdd(val) {
       this.addDialog = val;
-    }
+    },
+    // 获取状态列表
+    getGroupList() {}
   }
 };
 </script>

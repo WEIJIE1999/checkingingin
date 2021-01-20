@@ -7,11 +7,11 @@
   >
     <el-form
       label-width="100px"
-      :model="addUser"
-      :rules="addRules"
+      :model="importUser"
+      :rules="importRules"
       ref="addRef"
     >
-      <el-form-item label="导入用户:" prop="roleName">
+      <el-form-item label="导入用户:" prop="importMan">
         <el-upload
           class="upload-demo"
           action="https://jsonplaceholder.typicode.com/posts/"
@@ -31,11 +31,20 @@
 export default {
   props: ["importDialog"],
   data() {
-    return {};
+    return {
+      importUser: {
+        importMan: ""
+      },
+      importRules: {
+        importMan: [
+          { required: true, message: "请输入活动名称", trigger: "blur" }
+        ]
+      }
+    };
   },
   methods: {
     handleClose() {
-      this.$emit("closeImport", false);
+      this.$emit("clickClose", 4);
     },
     importBtn() {}
   }

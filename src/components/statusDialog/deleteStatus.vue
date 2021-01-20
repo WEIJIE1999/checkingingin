@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     handleClose() {
-      this.$emit("closeDelete", false);
+      this.$emit("clickClose", 2);
     },
     deleteBtn() {}
   }

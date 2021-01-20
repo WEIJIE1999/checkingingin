@@ -17,8 +17,12 @@
           v-model="addStatus.statusName"
           placeholder="请选择"
         >
-          <el-option label="1111" value="迟到"> </el-option>
-          <el-option label="222" value="迟到"> </el-option>
+          <el-option label="签到正常" value="签到正常"></el-option>
+          <el-option label="迟到" value="迟到"></el-option>
+          <el-option label="早退" value="早退"></el-option>
+          <el-option label="迟到转事假" value="迟到转事件假"></el-option>
+          <el-option label="签到正常" value="签到正常"></el-option>
+          <el-option label="缺卡" value="缺卡"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="状态规则:" prop="value">
@@ -34,19 +38,40 @@
         >
         </el-time-picker>
         <p v-show="this.addStatus.statusName === '缺卡'">无打卡记录</p>
-        <el-time-select
+        <div
           v-show="
             this.addStatus.statusName === '早退' ||
               this.addStatus.statusName === '签到正常'
           "
-          v-model="addStatus.value"
-          :picker-options="{
-            step: '00:15'
-          }"
-          placeholder="选择时间"
         >
-          <p>在</p>
-        </el-time-select>
+          <span>在 </span>
+          <el-time-select
+            v-model="addStatus.value"
+            :picker-options="{
+              step: '00:15'
+            }"
+            placeholder="选择时间"
+          >
+          </el-time-select>
+          <span> 之前打卡</span>
+        </div>
+        <div
+          v-show="
+            this.addStatus.statusName === '迟到转事假' ||
+              this.addStatus.statusName === '签退正常'
+          "
+        >
+          <span>在 </span>
+          <el-time-select
+            v-model="addStatus.value"
+            :picker-options="{
+              step: '00:15'
+            }"
+            placeholder="选择时间"
+          >
+          </el-time-select>
+          <span> 之后打卡</span>
+        </div>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -78,7 +103,7 @@ export default {
   methods: {
     handleClose() {
       this.addStatus.statusName = "";
-      this.$emit("closeAdd", false);
+      this.$emit("clickClose", 1);
     },
     addBtn() {}
   }

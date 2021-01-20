@@ -19,7 +19,12 @@
             v-model="status"
             placeholder="请选择考勤状态"
           >
-            <el-option label="区域一" value="shanghai"></el-option>
+            <el-option label="签到正常" value="签到正常"></el-option>
+            <el-option label="迟到" value="迟到"></el-option>
+            <el-option label="早退" value="早退"></el-option>
+            <el-option label="迟到转事假" value="迟到转事件假"></el-option>
+            <el-option label="签到正常" value="签到正常"></el-option>
+            <el-option label="缺卡" value="缺卡"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -29,7 +34,7 @@
           <el-button type="warning" @click="reset">重置</el-button>
         </el-form-item>
       </el-form>
-      <el-button size="large" id="searchBtn" @click="addStatus"
+      <el-button size="large" id="searchBtn" @click="onDialog('addStatus')"
         >添加状态</el-button
       >
       <!-- 表格信息 -->
@@ -62,7 +67,7 @@
                 type="danger"
                 icon="el-icon-delete"
                 size="mini"
-                @click="deleteStatus(scope.row.id)"
+                @click="onDialog('deleteStatus', scope.row.id)"
               ></el-button>
             </el-tooltip>
           </template>
@@ -72,21 +77,21 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage4"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
+        :current-page="queryInfo.pageNum"
+        :page-sizes="[5, 10, 15, 20]"
+        :page-size="queryInfo.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="400"
+        :total="total"
       >
       </el-pagination>
     </el-card>
     <!-- 添加状态弹框 -->
-    <addStatus :addDialog="addStatusVisible" @closeAdd="closeAdd" />
+    <addStatus :addDialog="addStatusVisible" @clickClose="clickClose" />
     <!-- 删除弹框 -->
     <deleteStatus
       :deleteDialog="deleteStatusVisible"
       :deleteId="deleteId"
-      @closeDelete="closeDelete"
+      @clickClose="clickClose"
     />
   </div>
 </template>
@@ -98,27 +103,62 @@ export default {
   components: { addStatus, deleteStatus },
   data() {
     return {
+      // 数据总条数
+      total: "",
+      // 获取用户列表的参数对象
+      queryInfo: {
+        // 当前的页数
+        pageNum: 1,
+        pageSize: 5
+      },
       status: "",
+      //   数据操作loading效果
       loading: true,
       statusList: [],
+      //   添加状态弹框显示
       addStatusVisible: false,
+      //   删除状态弹幕框显示
       deleteStatusVisible: false,
+      //   删除的Id
       deleteId: ""
     };
   },
+  //   初始化表格数据
+  mounted() {
+    this.getStatus();
+  },
   methods: {
-    deleteStatus(val) {
-      this.deleteStatusVisible = true;
-      this.deleteId = val;
+    //   监听全部弹窗点击事件
+    onDialog(type, id) {
+      this.loading = false;
+      switch (type) {
+        case "addStatus":
+          this.addStatusVisible = true;
+          break;
+        case "deleteStatus":
+          this.deleteStatusVisible = true;
+          this.deleteId = id;
+      }
     },
-    closeDelete(val) {
-      this.deleteStatusVisible = val;
+    // 监听 pagesize改变的事件
+    handleSizeChange(newSize) {
+      this.queryInfo.pageSize = newSize;
+      this.getStatus();
     },
-    addStatus() {
-      this.addStatusVisible = true;
+    // 监听页面值改变的事件
+    handleCurrentChange(newPage) {
+      this.queryInfo.pageNum = newPage;
+      this.this.getStatus();
     },
-    closeAdd(val) {
-      this.addStatusVisible = val;
+    // 获取表单数据
+    getStatus() {},
+    // 关闭删除弹框
+    clickClose(val) {
+      if (val === 2) {
+        this.deleteStatusVisible = false;
+      } else if (val === 1) {
+        this.addStatusVisible = false;
+      }
     }
   }
 };

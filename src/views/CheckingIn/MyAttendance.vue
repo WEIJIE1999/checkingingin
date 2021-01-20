@@ -19,7 +19,12 @@
             v-model="searchform.status"
             placeholder="请选择考勤状态"
           >
-            <el-option label="区域一" value="shanghai"></el-option>
+            <el-option label="签到正常" value="签到正常"></el-option>
+            <el-option label="迟到" value="迟到"></el-option>
+            <el-option label="早退" value="早退"></el-option>
+            <el-option label="迟到转事假" value="迟到转事件假"></el-option>
+            <el-option label="签到正常" value="签到正常"></el-option>
+            <el-option label="缺卡" value="缺卡"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item prop="theData" size="small" label="考勤时间:">
@@ -74,11 +79,11 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage4"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
+        :current-page="queryInfo.pageNum"
+        :page-sizes="[5, 10, 15, 20]"
+        :page-size="queryInfo.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="400"
+        :total="total"
       >
       </el-pagination>
     </el-card>
@@ -96,12 +101,7 @@
         label-width="80px"
       >
         <el-form-item label="用户姓名" prop="name">
-          <el-select
-            clearable
-            class="status"
-            v-model="addForm.name"
-            placeholder="请选择"
-          >
+          <el-select class="status" v-model="addForm.name" placeholder="请选择">
             <el-option label="小红" value="shanghai"></el-option>
           </el-select>
         </el-form-item>
@@ -127,6 +127,14 @@
 export default {
   data() {
     return {
+      queryInfo: {
+        // 当前的页数
+        pageNum: 1,
+        pageSize: 5
+      },
+      //   数据总条数
+      total: "",
+      // 操作数据loading效果
       loading: true,
       attendanceDate: [],
       searchform: {
@@ -134,11 +142,13 @@ export default {
         theData: "",
         search: ""
       },
+      //   添加弹框
       DialogAdd: false,
       addForm: {
         name: "",
         data: ""
       },
+      //   添加数据规则
       addRules: {
         name: [{ required: true, message: "请选择人员", trigger: "blur" }],
         data: [{ required: true, message: "请选择打卡时间", trigger: "blur" }]
@@ -146,6 +156,17 @@ export default {
     };
   },
   methods: {
+    // 监听 pagesize改变的事件
+    handleSizeChange(newSize) {
+      this.queryInfo.pageSize = newSize;
+      this.getGroupList();
+    },
+    // 监听页面值改变的事件
+    handleCurrentChange(newPage) {
+      this.queryInfo.pageNum = newPage;
+      this.this.getGroupList();
+    },
+    // 搜索
     search() {
       console.log("111");
     },
@@ -153,9 +174,11 @@ export default {
     reset() {
       this.$refs.searchform.resetFields();
     },
+    // 关闭弹框重置
     handleClose() {
       this.$refs.addForm.resetFields();
     },
+    // 点击打开弹框
     DialogAddVisible() {
       this.DialogAdd = true;
     }

@@ -59,7 +59,7 @@ export default {
   methods: {
     handleClose() {
       this.$refs.editRef.resetFields();
-      this.$emit("closeEdit", false);
+      this.$emit("clickClose", 3);
     },
     editBtn() {}
   }

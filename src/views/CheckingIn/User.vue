@@ -44,9 +44,14 @@
         >
       </el-form>
       <!-- 添加用户按钮 -->
-      <el-button class="addBtn" @click="addDialog">添加用户</el-button>
+      <el-button class="addBtn" @click="onDialog('addUser')"
+        >添加用户</el-button
+      >
       <!-- 导入用户按钮 -->
-      <el-button style="margin-left:40px" class="addBtn" @click="importDialog"
+      <el-button
+        style="margin-left:40px"
+        class="addBtn"
+        @click="onDialog('importUser')"
         >导入用户</el-button
       >
       <!-- 表格信息 -->
@@ -60,10 +65,10 @@
         style="width: 100%"
         :default-sort="{ prop: 'date', order: 'descending' }"
       >
-        <el-table-column sortable prop="datee" label="序号"> </el-table-column>
-        <el-table-column prop="namee" label="用户姓名"> </el-table-column>
-        <el-table-column prop="addresse" label="联系电话"> </el-table-column>
-        <el-table-column sortable prop="oute" label="添加时间">
+        <el-table-column sortable prop="id" label="序号"> </el-table-column>
+        <el-table-column prop="name" label="用户姓名"> </el-table-column>
+        <el-table-column prop="phoneNumber" label="联系电话"> </el-table-column>
+        <el-table-column sortable prop="createTime" label="添加时间">
         </el-table-column>
         <el-table-column label="操作" width="180px">
           <template slot-scope="scope">
@@ -78,7 +83,7 @@
                 type="primary"
                 icon="el-icon-edit"
                 size="mini"
-                @click="editDialog(scope.row.id)"
+                @click="onDialog('editUser', scope.row.id)"
               ></el-button>
             </el-tooltip>
             <!--删除按钮-->
@@ -93,38 +98,39 @@
                 type="danger"
                 icon="el-icon-delete"
                 size="mini"
-                @click="deleteDialog(scope.row.id)"
+                @click="onDialog('deleteUser', scope.row.id)"
               ></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
+      <!-- 分页 -->
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage4"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
+        :current-page="queryInfo.pageNum"
+        :page-sizes="[5, 10, 15, 20]"
+        :page-size="queryInfo.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="400"
+        :total="total"
       >
       </el-pagination>
     </el-card>
     <!-- 添加用户弹框 -->
-    <addUser :addDialog="addUservisible" @closeAdd="closeAdd" />
+    <addUser :addDialog="addUservisible" @clickClose="clickClose" />
     <!-- 导入用户弹框 -->
-    <importUser :importDialog="importUservisible" @closeImport="closeImport" />
+    <importUser :importDialog="importUservisible" @clickClose="clickClose" />
     <!-- 编辑用户弹框 -->
     <editUser
       :editId="editId"
       :addDialog="editUservisible"
-      @closeEdit="closeEdit"
+      @clickClose="clickClose"
     />
     <!-- 用户删除弹框 -->
     <deleteUser
       :deleteId="deleteId"
       :deleteDialog="deleteUservisible"
-      @closeDelete="closeDelete"
+      @clickClose="clickClose"
     />
   </div>
 </template>
@@ -138,50 +144,90 @@ export default {
   components: { addUser, importUser, editUser, deleteUser },
   data() {
     return {
+      // 获取用户列表的参数对象
+      queryInfo: {
+        // 当前的页数
+        pageNum: 1,
+        pageSize: 5
+      },
+      //   数据总条数
+      total: "",
       visible: false,
       searchTitle: "",
       select: "",
+      //   用户数据
       userList: [],
+      // 操作数据loading效果
       loading: true,
+      //   添加弹框显示
       addUservisible: false,
+      //   导入弹框显示
       importUservisible: false,
+      //   修改弹框显示
       editUservisible: false,
+      //   删除弹框显示
       deleteUservisible: false,
+      //   修改ID
       editId: "",
+      //   删除ID
       deleteId: ""
     };
   },
   methods: {
+    //   监听弹框回调事件
+    clickClose(val) {
+      if (val === 1) {
+        this.addUservisible = false;
+      } else if (val === 2) {
+        this.deleteUservisible = false;
+      } else if (val === 3) {
+        this.editUservisible = false;
+      } else if (val === 4) {
+        this.importUservisible = false;
+      }
+    },
+    // 监听点击弹框显示事件
+    onDialog(type, id) {
+      this.loading = false;
+      switch (type) {
+        case "addUser":
+          this.addUservisible = true;
+          break;
+        case "editUser":
+          this.editUservisible = true;
+          this.editId = id;
+          break;
+        case "importUser":
+          this.importUservisible = true;
+          break;
+        case "deleteUser":
+          this.deleteUservisible = true;
+          this.deleteId = id;
+          break;
+      }
+    },
+    // 监听 pagesize改变的事件
+    handleSizeChange(newSize) {
+      this.queryInfo.pageSize = newSize;
+      this.getGroupList();
+    },
+    // 监听页面值改变的事件
+    handleCurrentChange(newPage) {
+      this.queryInfo.pageNum = newPage;
+      this.this.getGroupList();
+    },
+    //   打开删除弹框
     deleteDialog(val) {
       this.deleteUservisible = true;
       this.deleteId = val;
     },
-    closeDelete(val) {
-      this.deleteUservisible = val;
-    },
-    importDialog() {
-      this.importUservisible = true;
-    },
-    editDialog(val) {
-      this.editUservisible = true;
-      this.editId = val;
-    },
-    closeEdit(val) {
-      this.editUservisible = val;
-    },
-    closeImport(val) {
-      this.importUservisible = val;
-    },
-    addDialog() {
-      this.addUservisible = true;
-    },
-    closeAdd(val) {
-      this.addUservisible = val;
-    },
+
+    // 重置表单
     reset() {
       this.searchTitle = "";
       this.select = "";
     },
+    // 搜索
     search() {}
   }
 };
