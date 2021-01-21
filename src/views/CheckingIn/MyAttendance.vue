@@ -23,7 +23,7 @@
             <el-option label="迟到" value="迟到"></el-option>
             <el-option label="早退" value="早退"></el-option>
             <el-option label="迟到转事假" value="迟到转事件假"></el-option>
-            <el-option label="签到正常" value="签到正常"></el-option>
+            <el-option label="签退正常" value="签退正常"></el-option>
             <el-option label="缺卡" value="缺卡"></el-option>
           </el-select>
         </el-form-item>
@@ -41,10 +41,10 @@
         </el-form-item>
         <el-form-item prop="search" size="small">
           <el-input
-            @change="search"
             clearable
             placeholder="请输入内容"
-            v-model="searchform.search"
+            v-model="searchform.content"
+            @keyup.enter.native="search"
           >
             <template slot="append">
               <el-button id="searchBtn" @click="search">搜索</el-button>
@@ -62,7 +62,7 @@
       <!-- 表格信息 -->
       <el-table
         v-loading="loading"
-        :data="attendanceDate"
+        :data="attendanceList"
         height="550"
         max-height="550"
         border
@@ -70,22 +70,22 @@
         style="width: 100%"
         :default-sort="{ prop: 'date', order: 'descending' }"
       >
-        <el-table-column prop="datee" label="用户姓名"> </el-table-column>
-        <el-table-column sortable prop="namee" label="考勤时间">
+        <el-table-column prop="userName" label="用户姓名"> </el-table-column>
+        <el-table-column sortable prop="checkTime" label="考勤时间">
         </el-table-column>
-        <el-table-column prop="addresse" label="签到状态"> </el-table-column>
-        <el-table-column prop="oute" label="签退状态"> </el-table-column>
+        <el-table-column prop="startStatus" label="签到状态"> </el-table-column>
+        <el-table-column prop="endStatus" label="签退状态"> </el-table-column>
       </el-table>
+      <!-- 分页 -->
       <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="queryInfo.pageNum"
+        :current-page="queryInfo.currPage"
         :page-sizes="[5, 10, 15, 20]"
         :page-size="queryInfo.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
-      >
-      </el-pagination>
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </el-card>
     <!-- 添加考勤记录弹框 -->
     <el-dialog
@@ -102,7 +102,12 @@
       >
         <el-form-item label="用户姓名" prop="name">
           <el-select class="status" v-model="addForm.name" placeholder="请选择">
-            <el-option label="小红" value="shanghai"></el-option>
+            <el-option
+              v-for="(item, index) in userList"
+              :key="index"
+              :label="item.userName"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="考勤时间" prop="data">
@@ -124,23 +129,30 @@
 </template>
 
 <script>
+import {
+  getAttendanceList,
+  getallUserList
+} from "@/utils/request/myAttendance";
 export default {
   data() {
     return {
+      // 全部成员列表
+      userList: [],
+      // 数据列表
+      attendanceList: [],
       queryInfo: {
         // 当前的页数
-        pageNum: 1,
+        currPage: 1,
         pageSize: 5
       },
       //   数据总条数
-      total: "",
+      total: 0,
       // 操作数据loading效果
       loading: true,
-      attendanceDate: [],
       searchform: {
         status: "",
         theData: "",
-        search: ""
+        content: ""
       },
       //   添加弹框
       DialogAdd: false,
@@ -155,20 +167,76 @@ export default {
       }
     };
   },
+  mounted() {
+    this.getAttendanceList();
+    this.getallList();
+  },
   methods: {
+    //   获取全部成员
+    async getallList() {
+      this.loading = true;
+      const data = await getallUserList();
+      this.userList = data;
+      this.loading = false;
+    },
+    //   获取我的考勤列表
+    async getAttendanceList() {
+      this.loading = true;
+      const data = await getAttendanceList(this.queryInfo);
+      this.total = data.totalElement;
+      this.attendanceList = data.data;
+      this.loading = false;
+    },
     // 监听 pagesize改变的事件
     handleSizeChange(newSize) {
       this.queryInfo.pageSize = newSize;
-      this.getGroupList();
+      this.getAttendanceList();
     },
     // 监听页面值改变的事件
     handleCurrentChange(newPage) {
-      this.queryInfo.pageNum = newPage;
-      this.this.getGroupList();
+      this.queryInfo.currPage = newPage;
+      this.getAttendanceList();
     },
     // 搜索
-    search() {
-      console.log("111");
+    async search() {
+      console.log(this.searchform.theData[1]);
+      this.loading = true;
+      this.queryInfo.currPage = 1;
+      this.queryInfo.pageSize = 5;
+      const data = await getAttendanceList({
+        status: this.searchform.status,
+        startTime: this.searchform.theData[0]
+          ? this.searchform.theData[0].getFullYear() +
+            "-" +
+            (this.searchform.theData[0].getMonth() + 1 + "").padStart(2, "0") +
+            "-" +
+            (this.searchform.theData[0].getDay() + "").padStart(2, "0") +
+            " " +
+            (this.searchform.theData[0].getHours() + "").padStart(2, "0") +
+            ":" +
+            (this.searchform.theData[1].getMinutes() + "").padStart(2, "0") +
+            ":" +
+            (this.searchform.theData[1].getSeconds() + "").padStart(2, "0")
+          : "",
+        endtTime: this.searchform.theData[1]
+          ? this.searchform.theData[1].getFullYear() +
+            "-" +
+            (this.searchform.theData[1].getMonth() + 1 + "").padStart(2, "0") +
+            "-" +
+            (this.searchform.theData[1].getDay() + "").padStart(2, "0") +
+            " " +
+            (this.searchform.theData[1].getHours() + "").padStart(2, "0") +
+            ":" +
+            (this.searchform.theData[1].getMinutes() + "").padStart(2, "0") +
+            ":" +
+            (this.searchform.theData[1].getSeconds() + "").padStart(2, "0")
+          : "",
+        content: this.searchform.content,
+        currPage: this.queryInfo.currPage,
+        pageSize: this.queryInfo.pageSize
+      });
+      this.attendanceList = data.data;
+      this.loading = false;
     },
     //   重置表单
     reset() {

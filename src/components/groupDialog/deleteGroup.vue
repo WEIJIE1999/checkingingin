@@ -1,7 +1,6 @@
 <template>
-  <!-- 删除用户弹框 -->
   <el-dialog
-    title="删除用户"
+    title="删除组"
     :visible.sync="deleteDialog"
     width="30%"
     :before-close="handleClose"
@@ -15,22 +14,16 @@
 </template>
 
 <script>
-import { deleteUser } from "@/utils/request/user";
 export default {
   props: ["deleteDialog", "deleteId"],
   data() {
     return {};
   },
   methods: {
-    //   关闭弹框
     handleClose() {
-      this.$emit("clickClose", 2);
+      this.$emit("deleteClose");
     },
-    // 删除按钮点击
-    async deleteBtn() {
-      await deleteUser({ id: this.deleteId });
-      this.$emit("clickClose", 2);
-    }
+    deleteBtn() {}
   }
 };
 </script>

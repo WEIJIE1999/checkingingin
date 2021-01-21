@@ -10,11 +10,11 @@
         <el-aside width="200px">
           <el-menu default-active="1" style="width:190px;height:820px">
             <el-menu-item @click="myAttendance" index="1">
-              <i class="el-icon-menu"></i>
+              <i class="el-icon-timer"></i>
               <span slot="title">我的考勤</span>
             </el-menu-item>
             <el-menu-item @click="user" index="2">
-              <i class="el-icon-menu"></i>
+              <i class="el-icon-user"></i>
               <span slot="title">用户管理</span>
             </el-menu-item>
             <el-menu-item @click="attendanceStatus" index="3">
@@ -22,7 +22,7 @@
               <span slot="title">考勤状态管理</span>
             </el-menu-item>
             <el-menu-item @click="attendanceGroup" index="4">
-              <i class="el-icon-menu"></i>
+              <i class="el-icon-tickets"></i>
               <span slot="title">考勤组管理</span>
             </el-menu-item>
           </el-menu>

@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    title="添加用户"
+    title="修改用户"
     :visible.sync="editDialog"
     width="30%"
     :before-close="handleClose"
@@ -38,16 +38,16 @@ export default {
       cb(new Error("请输入合法的手机号"));
     };
     return {
+      // 修改用户参数
       editUser: {
         roleName: "",
         phone: ""
       },
+      //   修改规则
       editRules: {
-        roleName: [
-          { required: true, message: "请输入活动名称", trigger: "blur" }
-        ],
+        roleName: [{ required: true, message: "请输入姓名", trigger: "blur" }],
         phone: [
-          { required: true, message: "请选择活动区域", trigger: "change" },
+          { required: true, message: "请选择手机号码", trigger: "change" },
           {
             validator: checkMobile,
             trigger: "blur"
@@ -57,8 +57,8 @@ export default {
     };
   },
   methods: {
+    //   关闭修改弹框
     handleClose() {
-      this.$refs.editRef.resetFields();
       this.$emit("clickClose", 3);
     },
     editBtn() {}

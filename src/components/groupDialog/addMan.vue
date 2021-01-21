@@ -6,13 +6,9 @@
     width="35%"
     :before-close="handleClose"
   >
-    <el-transfer
-      filterable
-      :filter-method="filterMethod"
-      filter-placeholder="请输入城市拼音"
-      v-model="value"
-      :data="data"
-    >
+    <el-transfer>
+      filterable :filter-method="filterMethod"
+      filter-placeholder="请输入城市拼音" v-model="value" :data="data" >
     </el-transfer>
     <span slot="footer" class="dialog-footer"
       ><el-button type="primary" @click="addMan">确 定</el-button>
@@ -28,7 +24,7 @@ export default {
   methods: {
     addMan() {},
     handleClose() {
-      this.$emit("closeAddMan");
+      this.$emit("addManClose");
     }
   }
 };

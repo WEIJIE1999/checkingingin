@@ -97,12 +97,13 @@
             <div
               style="background-color: #F0F0F0;width:100%;height:100%"
               v-if="
-                (date.getMonth() + 1 === 1 ||
-                  date.getMonth() + 1 === 4 ||
-                  date.getMonth() + 1 === 5 ||
-                  date.getMonth() + 1 === 8 ||
-                  date.getMonth() + 1 === 12 ||
-                  date.getMonth() + 1 === 11) &&
+                date.getFullYear() === 2021 &&
+                  (date.getMonth() + 1 === 1 ||
+                    date.getMonth() + 1 === 4 ||
+                    date.getMonth() + 1 === 5 ||
+                    date.getMonth() + 1 === 8 ||
+                    date.getMonth() + 1 === 12 ||
+                    date.getMonth() + 1 === 11) &&
                   ((date.getDate() % 2 === 0 && date.getDay() === 6) ||
                     date.getDay() === 0)
               "
@@ -120,12 +121,13 @@
             <div
               style="background-color: #F0F0F0;width:100%;height:100%"
               v-else-if="
-                (date.getMonth() + 1 === 2 ||
-                  date.getMonth() + 1 === 3 ||
-                  date.getMonth() + 1 === 7 ||
-                  date.getMonth() + 1 === 6 ||
-                  date.getMonth() + 1 === 9 ||
-                  date.getMonth() + 1 === 10) &&
+                date.getFullYear() === 2021 &&
+                  (date.getMonth() + 1 === 2 ||
+                    date.getMonth() + 1 === 3 ||
+                    date.getMonth() + 1 === 7 ||
+                    date.getMonth() + 1 === 6 ||
+                    date.getMonth() + 1 === 9 ||
+                    date.getMonth() + 1 === 10) &&
                   ((date.getDate() % 2 === 1 && date.getDay() === 6) ||
                     date.getDay() === 0)
               "
@@ -140,8 +142,7 @@
               </p>
               <p style="text-align:center;line-height:50px">休息</p>
             </div>
-
-            <div v-else>
+            <div v-else-if="date.getFullYear() === 2021">
               <p style="text-align:center;line-height:30px">
                 {{
                   data.day
@@ -151,6 +152,29 @@
                 }}
               </p>
               <p style="text-align:center;line-height:50px">上班</p>
+            </div>
+
+            <div v-else-if="date.getFullYear() > 2021">
+              <p style="text-align:center;line-height:30px">
+                {{
+                  data.day
+                    .split("-")
+                    .slice(2)
+                    .join("-")
+                }}
+              </p>
+              <p style="text-align:center;line-height:50px">待定</p>
+            </div>
+            <div v-else>
+              <p style="text-align:center;line-height:30px">
+                {{
+                  data.day
+                    .split("-")
+                    .slice(2)
+                    .join("-")
+                }}
+              </p>
+              <p style="text-align:center;line-height:50px">过去</p>
             </div>
           </template>
         </el-calendar>
@@ -162,12 +186,13 @@
             <div
               style="background-color: #F0F0F0;width:100%;height:100%"
               v-if="
-                (date.getMonth() + 1 === 1 ||
-                  date.getMonth() + 1 === 4 ||
-                  date.getMonth() + 1 === 5 ||
-                  date.getMonth() + 1 === 8 ||
-                  date.getMonth() + 1 === 12 ||
-                  date.getMonth() + 1 === 11) &&
+                date.getFullYear() === 2021 &&
+                  (date.getMonth() + 1 === 1 ||
+                    date.getMonth() + 1 === 4 ||
+                    date.getMonth() + 1 === 5 ||
+                    date.getMonth() + 1 === 8 ||
+                    date.getMonth() + 1 === 12 ||
+                    date.getMonth() + 1 === 11) &&
                   ((date.getDate() % 2 === 0 && date.getDay() === 0) ||
                     date.getDay() === 6)
               "
@@ -186,12 +211,13 @@
             <div
               style="background-color: #F0F0F0;width:100%;height:100%"
               v-else-if="
-                (date.getMonth() + 1 === 2 ||
-                  date.getMonth() + 1 === 3 ||
-                  date.getMonth() + 1 === 7 ||
-                  date.getMonth() + 1 === 6 ||
-                  date.getMonth() + 1 === 9 ||
-                  date.getMonth() + 1 === 10) &&
+                date.getFullYear() === 2021 &&
+                  (date.getMonth() + 1 === 2 ||
+                    date.getMonth() + 1 === 3 ||
+                    date.getMonth() + 1 === 7 ||
+                    date.getMonth() + 1 === 6 ||
+                    date.getMonth() + 1 === 9 ||
+                    date.getMonth() + 1 === 10) &&
                   ((date.getDate() % 2 === 1 && date.getDay() === 0) ||
                     date.getDay() === 6)
               "
@@ -207,7 +233,7 @@
               <p style="text-align:center;line-height:50px">休息</p>
             </div>
 
-            <div v-else>
+            <div v-else-if="date.getFullYear() === 2021">
               <p style="text-align:center;line-height:30px">
                 {{
                   data.day
@@ -218,6 +244,28 @@
               </p>
               <p style="text-align:center;line-height:50px">上班</p>
             </div>
+            <div v-else-if="date.getFullYear() > 2021">
+              <p style="text-align:center;line-height:30px">
+                {{
+                  data.day
+                    .split("-")
+                    .slice(2)
+                    .join("-")
+                }}
+              </p>
+              <p style="text-align:center;line-height:50px">待定</p>
+            </div>
+            <div v-else>
+              <p style="text-align:center;line-height:30px">
+                {{
+                  data.day
+                    .split("-")
+                    .slice(2)
+                    .join("-")
+                }}
+              </p>
+              <p style="text-align:center;line-height:50px">过去</p>
+            </div>
           </template>
         </el-calendar>
       </el-form>
@@ -226,7 +274,7 @@
         <el-button @click="handleClose">取 消</el-button>
       </span>
     </el-dialog>
-    <addMan :addManDialog="addManDialog" @closeAddMan="closeAddMan" />
+    <addMan :addManDialog="addManDialog" @addManClose="closeAddMan" />
   </div>
 </template>
 
@@ -281,6 +329,7 @@ export default {
       this.addManDialog = false;
     },
     handleClose() {
+      this.$refs.addRef.resetFields();
       this.$emit("closeAdd", false);
     },
     addBtn() {

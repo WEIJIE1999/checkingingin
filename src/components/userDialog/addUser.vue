@@ -1,4 +1,5 @@
 <template>
+  <!-- 用户添加弹框 -->
   <el-dialog
     title="添加用户"
     :visible.sync="addDialog"
@@ -11,11 +12,11 @@
       :rules="addRules"
       ref="addRef"
     >
-      <el-form-item label="用户姓名:" prop="name">
-        <el-input v-model="addUser.name"></el-input>
+      <el-form-item label="用户姓名:" prop="userName">
+        <el-input v-model="addUser.userName"></el-input>
       </el-form-item>
-      <el-form-item label="手机号码:" prop="phoneNumber">
-        <el-input v-model="addUser.phoneNumber"></el-input>
+      <el-form-item label="手机号码:" prop="userPhone">
+        <el-input v-model="addUser.userPhone"></el-input>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -26,6 +27,7 @@
 </template>
 
 <script>
+import { addUser } from "@/utils/request/user";
 export default {
   props: ["addDialog"],
   data() {
@@ -40,14 +42,14 @@ export default {
     return {
       // 添加表单
       addUser: {
-        name: "",
-        phoneNumber: ""
+        userName: "",
+        userPhone: ""
       },
       //   添加规则
       addRules: {
-        name: [{ required: true, message: "请输入活动名称", trigger: "blur" }],
-        phoneNumber: [
-          { required: true, message: "请选择活动区域", trigger: "change" },
+        userName: [{ required: true, message: "请输入姓名", trigger: "blur" }],
+        userPhone: [
+          { required: true, message: "请输入手机号码", trigger: "change" },
           {
             validator: checkMobile,
             trigger: "blur"
@@ -63,7 +65,14 @@ export default {
       this.$emit("clickClose", 1);
     },
     // 添加功能
-    addBtn() {}
+    addBtn() {
+      this.$refs.addRef.validate(async valid => {
+        if (!valid) return;
+        await addUser(this.addUser);
+        this.$emit("clickClose", 1);
+        this.$refs.addRef.resetFields();
+      });
+    }
   }
 };
 </script>
