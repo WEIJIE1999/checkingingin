@@ -100,8 +100,13 @@
         ref="addForm"
         label-width="80px"
       >
-        <el-form-item label="用户姓名" prop="name">
-          <el-select class="status" v-model="addForm.name" placeholder="请选择">
+        <el-form-item label="用户姓名" prop="id">
+          <el-select
+            class="status"
+            ref="selectCh"
+            v-model="addForm.id"
+            placeholder="请选择"
+          >
             <el-option
               v-for="(item, index) in userList"
               :key="index"
@@ -110,10 +115,10 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="考勤时间" prop="data">
+        <el-form-item label="考勤时间" prop="checkTime">
           <el-date-picker
             clearable
-            v-model="addForm.data"
+            v-model="addForm.checkTime"
             type="datetime"
             placeholder="选择日期时间"
           >
@@ -121,7 +126,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="DialogAdd = false">确 定</el-button>
+        <el-button type="primary" @click="addAttendanceBtn">确 定</el-button>
         <el-button @click="DialogAdd = false">取 消</el-button>
       </span>
     </el-dialog>
@@ -131,15 +136,19 @@
 <script>
 import {
   getAttendanceList,
-  getallUserList
+  getallUserList,
+  addAttendance
 } from "@/utils/request/myAttendance";
 export default {
   data() {
     return {
+      // 下拉框label值
+      userName: "",
       // 全部成员列表
       userList: [],
       // 数据列表
       attendanceList: [],
+      //   分页
       queryInfo: {
         // 当前的页数
         currPage: 1,
@@ -157,8 +166,8 @@ export default {
       //   添加弹框
       DialogAdd: false,
       addForm: {
-        name: "",
-        data: ""
+        id: "",
+        checkTime: ""
       },
       //   添加数据规则
       addRules: {
@@ -172,6 +181,32 @@ export default {
     this.getallList();
   },
   methods: {
+    //   添加考勤
+    async addAttendanceBtn() {
+      this.$refs.addForm.validate(async valid => {
+        if (!valid) return;
+        await addAttendance({
+          userName: this.$refs.selectCh.selected.label,
+          userId: this.addForm.id,
+          checkTime: this.addForm.checkTime
+            ? this.addForm.checkTime.getFullYear() +
+              "-" +
+              (this.addForm.checkTime.getMonth() + 1 + "").padStart(2, "0") +
+              "-" +
+              (this.addForm.checkTime.getDate() + "").padStart(2, "0") +
+              " " +
+              (this.addForm.checkTime.getHours() + "").padStart(2, "0") +
+              ":" +
+              (this.addForm.checkTime.getMinutes() + "").padStart(2, "0") +
+              ":" +
+              (this.addForm.checkTime.getSeconds() + "").padStart(2, "0")
+            : ""
+        });
+        this.DialogAdd = false;
+        this.$refs.addForm.resetFields();
+        this.getAttendanceList();
+      });
+    },
     //   获取全部成员
     async getallList() {
       this.loading = true;
@@ -182,7 +217,14 @@ export default {
     //   获取我的考勤列表
     async getAttendanceList() {
       this.loading = true;
-      const data = await getAttendanceList(this.queryInfo);
+      const data = await getAttendanceList({
+        status: "",
+        startTime: "",
+        endtTime: "",
+        content: "",
+        currPage: this.queryInfo.currPage,
+        pageSize: this.queryInfo.pageSize
+      });
       this.total = data.totalElement;
       this.attendanceList = data.data;
       this.loading = false;
@@ -199,7 +241,6 @@ export default {
     },
     // 搜索
     async search() {
-      console.log(this.searchform.theData[1]);
       this.loading = true;
       this.queryInfo.currPage = 1;
       this.queryInfo.pageSize = 5;
@@ -210,7 +251,7 @@ export default {
             "-" +
             (this.searchform.theData[0].getMonth() + 1 + "").padStart(2, "0") +
             "-" +
-            (this.searchform.theData[0].getDay() + "").padStart(2, "0") +
+            (this.searchform.theData[0].getDate() + "").padStart(2, "0") +
             " " +
             (this.searchform.theData[0].getHours() + "").padStart(2, "0") +
             ":" +
@@ -223,7 +264,7 @@ export default {
             "-" +
             (this.searchform.theData[1].getMonth() + 1 + "").padStart(2, "0") +
             "-" +
-            (this.searchform.theData[1].getDay() + "").padStart(2, "0") +
+            (this.searchform.theData[1].getDate() + "").padStart(2, "0") +
             " " +
             (this.searchform.theData[1].getHours() + "").padStart(2, "0") +
             ":" +

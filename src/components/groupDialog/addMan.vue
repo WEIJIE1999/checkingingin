@@ -24,7 +24,7 @@ export default {
   methods: {
     addMan() {},
     handleClose() {
-      this.$emit("addManClose");
+      this.$emit("update:addManDialog", false);
     }
   }
 };

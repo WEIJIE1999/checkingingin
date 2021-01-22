@@ -67,7 +67,7 @@
                 type="danger"
                 icon="el-icon-delete"
                 size="mini"
-                @click="onDialog('deleteStatus', scope.row.id)"
+                @click="deleteById(scope.row.id)"
               ></el-button>
             </el-tooltip>
           </template>
@@ -86,25 +86,18 @@
       </el-pagination>
     </el-card>
     <!-- 添加状态弹框 -->
-    <addStatus :addDialog="addStatusVisible" @clickClose="clickClose" />
-    <!-- 删除弹框 -->
-    <deleteStatus
-      :deleteDialog="deleteStatusVisible"
-      :deleteId="deleteId"
-      @clickClose="clickClose"
-    />
+    <addStatus :addDialog.sync="addStatusVisible" @clickClose="clickClose" />
   </div>
 </template>
 
 <script>
 import addStatus from "@/components/statusDialog/addStatus.vue";
-import deleteStatus from "@/components/statusDialog/deleteStatus.vue";
 export default {
-  components: { addStatus, deleteStatus },
+  components: { addStatus },
   data() {
     return {
       // 数据总条数
-      total: "",
+      total: 0,
       // 获取用户列表的参数对象
       queryInfo: {
         // 当前的页数
@@ -117,8 +110,6 @@ export default {
       statusList: [],
       //   添加状态弹框显示
       addStatusVisible: false,
-      //   删除状态弹幕框显示
-      deleteStatusVisible: false,
       //   删除的Id
       deleteId: ""
     };
@@ -128,20 +119,34 @@ export default {
     this.getStatus();
   },
   methods: {
+    //   搜索
+    search() {},
+    //   根据id删除
+    deleteById() {
+      this.$confirm("是否确定删除改考勤状态？", "删除状态", {
+        distinguishCancelAndClose: true,
+        cancelButtonText: "取消",
+        confirmButtonText: "确定"
+      })
+        .then(() => {})
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "取消删除"
+          });
+        });
+    },
     //   重置按钮
     reset() {
       this.status = "";
     },
     //   监听全部弹窗点击事件
-    onDialog(type, id) {
+    onDialog(type) {
       this.loading = false;
       switch (type) {
         case "addStatus":
           this.addStatusVisible = true;
           break;
-        case "deleteStatus":
-          this.deleteStatusVisible = true;
-          this.deleteId = id;
       }
     },
     // 监听 pagesize改变的事件

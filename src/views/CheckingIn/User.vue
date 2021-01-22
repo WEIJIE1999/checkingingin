@@ -18,6 +18,7 @@
           class="input-with-select"
           clearable
           @keyup.enter.native="search"
+          @change="changeSearchContent"
         >
           <el-select
             slot="prepend"
@@ -26,9 +27,9 @@
             placeholder="请选择"
             clearable
           >
-            <el-option label="序号" value="1" />
-            <el-option label="用户姓名" value="2" />
-            <el-option label="用户电话" value="3" />
+            <el-option label="序号" value="id" />
+            <el-option label="用户姓名" value="userName" />
+            <el-option label="用户电话" value="userPhone" />
           </el-select>
           <el-button id="searchBtn" slot="append" size="small" @click="search">
             搜索
@@ -67,8 +68,8 @@
         :default-sort="{ prop: 'date', order: 'descending' }"
       >
         <el-table-column sortable prop="id" label="序号" />
-        <el-table-column prop="userName" label="用户姓名" />
-        <el-table-column prop="userPhone" label="联系电话" />
+        <el-table-column prop="userName" label="姓名" />
+        <el-table-column prop="userPhone" label="手机号码" />
         <el-table-column sortable prop="createTime" label="添加时间">
           <template slot-scope="scope">{{
             scope.row.createTime | dataFormat
@@ -87,7 +88,7 @@
                 type="primary"
                 icon="el-icon-edit"
                 size="mini"
-                @click="onDialog('editUser', scope.row)"
+                @click="onDialog('addUser', scope.row)"
               />
             </el-tooltip>
             <!--删除按钮-->
@@ -102,7 +103,7 @@
                 type="danger"
                 icon="el-icon-delete"
                 size="mini"
-                @click="onDialog('deleteUser', scope.row.id)"
+                @click="deleteById(scope.row.id)"
               />
             </el-tooltip>
           </template>
@@ -120,39 +121,39 @@
       />
     </el-card>
     <!-- 添加用户弹框 -->
-    <addUser :add-dialog="addUservisible" @clickClose="clickClose" />
-    <!-- 导入用户弹框 -->
-    <importUser :import-dialog="importUservisible" @clickClose="clickClose" />
-    <!-- 编辑用户弹框 -->
-    <editUser
-      :edit-id="editId"
-      :edit-dialog="editUservisible"
+    <addUser
+      :editList="editList"
+      :add-dialog.sync="addUservisible"
       @clickClose="clickClose"
     />
-    <!-- 用户删除弹框 -->
-    <deleteUser
-      :delete-id="deleteId"
-      :delete-dialog="deleteUservisible"
+    <!-- 导入用户弹框 -->
+    <importUser
+      :import-dialog.sync="importUservisible"
       @clickClose="clickClose"
     />
   </div>
 </template>
 
 <script>
-import { getUserList } from "@/utils/request/user";
+import { getUserList, deleteUser } from "@/utils/request/user";
 import addUser from "@/components/userDialog/addUser.vue";
-import deleteUser from "@/components/userDialog/deleteUser.vue";
-import editUser from "@/components/userDialog/editUser.vue";
 import importUser from "@/components/userDialog/importUser.vue";
 export default {
-  components: { addUser, importUser, editUser, deleteUser },
+  components: { addUser, importUser },
   data() {
     return {
+      searchForm: {
+        id: "",
+        userName: "",
+        userPhone: ""
+      },
       // 搜索信息
       searchContent: {
         content: "",
         select: ""
       },
+      //   搜索参数
+      searchAll: "",
       // 获取用户列表的参数对象
       queryInfo: {
         // 当前的页数
@@ -169,12 +170,8 @@ export default {
       addUservisible: false,
       //   导入弹框显示
       importUservisible: false,
-      //   修改弹框显示
-      editUservisible: false,
-      //   删除弹框显示
-      deleteUservisible: false,
-      //   修改ID
-      editId: "",
+      //   编辑信息
+      editList: {},
       //   删除ID
       deleteId: ""
     };
@@ -183,6 +180,38 @@ export default {
     this.getUser();
   },
   methods: {
+    //   输入框内容改变
+    changeSearchContent() {
+      console.log(this.searchContent.select);
+      if (this.searchContent.select === "id") {
+        this.searchForm.id = this.searchContent.content;
+        console.log(this.searchForm.id);
+      } else if (this.searchContent.select === "userName") {
+        this.searchForm.userName = this.searchContent.content;
+        console.log(this.searchForm.userName);
+      } else if (this.searchContent.select === "userPhone") {
+        this.searchForm.userPhone = this.searchContent.content;
+        console.log(this.searchForm.userPhone);
+      }
+    },
+    //   删除用户
+    deleteById(id) {
+      this.$confirm("是否确定删除改用户？", "删除用户", {
+        distinguishCancelAndClose: true,
+        cancelButtonText: "取消",
+        confirmButtonText: "确定"
+      })
+        .then(async () => {
+          await deleteUser({ id: id });
+          this.getUser();
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "取消删除"
+          });
+        });
+    },
     //   获取用户列表
     async getUser() {
       this.loading = true;
@@ -190,17 +219,12 @@ export default {
       this.total = data.totalElements;
       this.userList = data.data;
       this.loading = false;
+      console.log(data);
     },
     //   监听弹框回调事件
     clickClose(val) {
       if (val === 1) {
         this.addUservisible = false;
-        this.getUser();
-      } else if (val === 2) {
-        this.deleteUservisible = false;
-        this.getUser();
-      } else if (val === 3) {
-        this.editUservisible = false;
         this.getUser();
       } else if (val === 4) {
         this.importUservisible = false;
@@ -212,18 +236,11 @@ export default {
       this.loading = false;
       switch (type) {
         case "addUser":
+          this.editList = id || {};
           this.addUservisible = true;
-          break;
-        case "editUser":
-          this.editUservisible = true;
-          this.editId = id;
           break;
         case "importUser":
           this.importUservisible = true;
-          break;
-        case "deleteUser":
-          this.deleteUservisible = true;
-          this.deleteId = id;
           break;
       }
     },
@@ -244,7 +261,16 @@ export default {
       this.searchContent.select = "";
     },
     // 搜索
-    search() {}
+    async search() {
+      const data = await getUserList({
+        id: this.searchForm.id,
+        userName: this.searchForm.userName,
+        userPhone: this.searchForm.userPhone,
+        currPage: 1,
+        pageSize: this.queryInfo.pageSize
+      });
+      this.userList = data.data;
+    }
   }
 };
 </script>

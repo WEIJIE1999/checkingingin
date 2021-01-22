@@ -37,7 +37,6 @@
 export default {
   methods: {
     myAttendance() {
-      console.log(this.$router.history.current.path);
       if (this.$router.history.current.path !== "/attendance/myAttendance") {
         this.$router.push("/attendance/myAttendance");
       }

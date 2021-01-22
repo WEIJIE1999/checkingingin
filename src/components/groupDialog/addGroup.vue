@@ -47,13 +47,15 @@
             <el-checkbox disabled label="星期五"></el-checkbox>
             <el-checkbox
               :disabled="
-                addGroup.radio === '2' && addGroup.select[0] === '星期日'
+                (addGroup.radio === '2' && addGroup.select[0] === '星期日') ||
+                  addGroup.radio === '1'
               "
               label="星期六"
             ></el-checkbox>
             <el-checkbox
               :disabled="
-                addGroup.radio === '2' && addGroup.select[0] === '星期六'
+                (addGroup.radio === '2' && addGroup.select[0] === '星期六') ||
+                  addGroup.radio === '1'
               "
               label="星期日"
             ></el-checkbox>
@@ -274,7 +276,7 @@
         <el-button @click="handleClose">取 消</el-button>
       </span>
     </el-dialog>
-    <addMan :addManDialog="addManDialog" @addManClose="closeAddMan" />
+    <addMan :addManDialog.sync="addManDialog" @addManClose="closeAddMan" />
   </div>
 </template>
 
@@ -330,7 +332,7 @@ export default {
     },
     handleClose() {
       this.$refs.addRef.resetFields();
-      this.$emit("closeAdd", false);
+      this.$emit("update:addDialog", false);
     },
     addBtn() {
       console.log(this.addGroup);

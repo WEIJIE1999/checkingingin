@@ -108,7 +108,7 @@ export default {
   methods: {
     handleClose() {
       this.addStatus.statusName = "";
-      this.$emit("clickClose", 1);
+      this.$emit("update:addDialog", false);
     },
     addBtn() {}
   }

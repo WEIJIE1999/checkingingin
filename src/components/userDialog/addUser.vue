@@ -1,7 +1,7 @@
 <template>
   <!-- 用户添加弹框 -->
   <el-dialog
-    title="添加用户"
+    :title="editList ? '编辑用户' : '添加用户'"
     :visible.sync="addDialog"
     width="30%"
     :before-close="handleClose"
@@ -27,9 +27,9 @@
 </template>
 
 <script>
-import { addUser } from "@/utils/request/user";
+import { addUser, editUser } from "@/utils/request/user";
 export default {
-  props: ["addDialog"],
+  props: ["addDialog", "editList"],
   data() {
     // 验证手机的功能
     const checkMobile = (rule, value, cb) => {
@@ -49,7 +49,7 @@ export default {
       addRules: {
         userName: [{ required: true, message: "请输入姓名", trigger: "blur" }],
         userPhone: [
-          { required: true, message: "请输入手机号码", trigger: "change" },
+          { required: true, message: "请输入手机号码", trigger: "blur" },
           {
             validator: checkMobile,
             trigger: "blur"
@@ -58,19 +58,51 @@ export default {
       }
     };
   },
+  watch: {
+    editList: {
+      handler(nVal) {
+        if (nVal && Object.keys(nVal).length > 0) {
+          this.addUser.userName = nVal.userName;
+          this.addUser.userPhone = nVal.userPhone;
+        } else {
+          this.addUser.userName = "";
+          this.addUser.userPhone = "";
+        }
+      },
+      deep: true
+    }
+  },
+  //   mounted() {
+  //     if (Object.keys(this.editList).length > 0) {
+  //       this.addUser.userName = this.editList.userName;
+  //       this.addUser.userPhone = this.editList.userPhone;
+  //     }
+  //   },
   methods: {
     //   重置表单关闭弹框
     handleClose() {
-      this.$refs.addRef.resetFields();
-      this.$emit("clickClose", 1);
+      //   this.$refs.addRef.resetFields();
+      //   this.$emit("clickClose", 1);
+      this.$emit("update:addDialog", false);
     },
     // 添加功能
     addBtn() {
       this.$refs.addRef.validate(async valid => {
         if (!valid) return;
-        await addUser(this.addUser);
-        this.$emit("clickClose", 1);
-        this.$refs.addRef.resetFields();
+        if (this.editList && Object.keys(this.editList).length > 0) {
+          await editUser({
+            id: this.editList.id,
+            userName: this.addUser.userName,
+            userPhone: this.addUser.userPhone,
+            version: this.editList.version
+          });
+          this.$emit("clickClose", 1);
+          this.$refs.addRef.resetFields();
+        } else {
+          await addUser(this.addUser);
+          this.$emit("clickClose", 1);
+          this.$refs.addRef.resetFields();
+        }
       });
     }
   }

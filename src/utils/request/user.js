@@ -5,11 +5,11 @@ import Message from "element-ui/packages/message";
 /* 获取用户列表 */
 export const getUserList = (params = {}) => {
   return https.get("/user/listOfUser", params).then(res => {
-    if (res.code === "0") {
-      return res.data;
-    } else {
-      return false;
-    }
+    Message({
+      type: res.code === "0" ? "success" : "error",
+      message: res.code === "0" ? "查询成功!" : res.message
+    });
+    return res.data;
   });
 };
 
@@ -39,7 +39,11 @@ export const deleteUser = params => {
 /* 用户编辑 */
 export const editUser = params => {
   return https.post("/user/edit", params).then(res => {
-    return res.code === "0" ? res.data : false;
+    Message({
+      type: res.code === "0" ? "success" : "error",
+      message: res.code === "0" ? "提交成功!" : res.message
+    });
+    return res.code === "0";
   });
 };
 

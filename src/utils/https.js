@@ -28,9 +28,9 @@ axios.interceptors.request.use(
 //响应拦截器即异常处理
 axios.interceptors.response.use(
   (response) => {    
-    if (response.data.code != 0) {      
+    if (response.data.code != '0') {      
       Message({        
-        message: response.data.message || 'error',
+        message: response.data.data || 'error',
         type: 'error'
       })
     }

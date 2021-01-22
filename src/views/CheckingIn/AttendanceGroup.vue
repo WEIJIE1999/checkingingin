@@ -63,7 +63,7 @@
                 type="danger"
                 icon="el-icon-delete"
                 size="mini"
-                @click="deleteVisible(scope.row.id)"
+                @click="deleteById(scope.row.id)"
               ></el-button>
             </el-tooltip>
           </template>
@@ -81,17 +81,15 @@
       >
       </el-pagination>
     </el-card>
-    <addGroup :addDialog="addDialog" @closeAdd="closeAdd" />
-    <deleteGroup :deleteDialog="deleteDialog" @deleteClose="closeDelete" />
+    <addGroup :addDialog.sync="addDialog" @closeAdd="closeAdd" />
   </div>
 </template>
 
 <script>
-import deleteGroup from "@/components/groupDialog/deleteGroup";
 import addGroup from "@/components/groupDialog/addGroup";
 import { getGroup } from "@/utils/request/group";
 export default {
-  components: { addGroup, deleteGroup },
+  components: { addGroup },
   data() {
     return {
       // 考勤组表格
@@ -100,8 +98,6 @@ export default {
       loading: true,
       //   控制添加弹框出现
       addDialog: false,
-      //   控制删除弹框出现
-      deleteDialog: false,
       // 获取用户列表的参数对象
       queryInfo: {
         // 当前的页数
@@ -109,7 +105,7 @@ export default {
         pageSize: 5
       },
       //   数据总条数
-      total: ""
+      total: 0
     };
   },
   //   进入页面初始化数据
@@ -117,6 +113,21 @@ export default {
     this.getGroupList();
   },
   methods: {
+    //   删除按钮
+    deleteById() {
+      this.$confirm("是否确定删除该考勤组？", "删除考勤组", {
+        distinguishCancelAndClose: true,
+        cancelButtonText: "取消",
+        confirmButtonText: "确定"
+      })
+        .then(() => {})
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "取消删除"
+          });
+        });
+    },
     // 监听 pagesize改变的事件
     handleSizeChange(newSize) {
       this.queryInfo.pageSize = newSize;
@@ -139,15 +150,6 @@ export default {
     closeAdd() {
       this.addDialog = false;
       this.getGroupList();
-    },
-    // 关闭删除弹框
-    closeDelete() {
-      this.deleteDialog = false;
-      this.getGroupList();
-    },
-    // 删除弹框出现
-    deleteVisible() {
-      this.deleteDialog = true;
     },
     addGroup() {
       this.addDialog = true;

@@ -12,7 +12,7 @@
       :rules="importRules"
       ref="addRef"
     >
-      <el-form-item label="导入用户:" prop="importMan">
+      <el-form-item label="导入用户:" prop="fileList">
         <el-upload
           class="avatar-uploader"
           ref="upload"
@@ -54,7 +54,7 @@ export default {
   methods: {
     //   关闭弹窗
     handleClose() {
-      this.$emit("clickClose", 4);
+      this.$emit("update:import-dialog", false);
     },
     // 确定按钮
     importBtn() {
