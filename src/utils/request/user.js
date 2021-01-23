@@ -5,11 +5,11 @@ import Message from "element-ui/packages/message";
 /* 获取用户列表 */
 export const getUserList = (params = {}) => {
   return https.get("/user/listOfUser", params).then(res => {
-    Message({
-      type: res.code === "0" ? "success" : "error",
-      message: res.code === "0" ? "查询成功!" : res.message
-    });
-    return res.data;
+    if (res.code === "0") {
+      return res.data;
+    } else {
+      return false;
+    }
   });
 };
 
@@ -18,7 +18,7 @@ export const addUser = params => {
   return https.post("/user/save", params).then(res => {
     Message({
       type: res.code === "0" ? "success" : "error",
-      message: res.code === "0" ? "提交成功!" : res.message
+      message: res.code === "0" ? "添加成功!" : res.message
     });
     return res.code === "0";
   });
@@ -41,19 +41,15 @@ export const editUser = params => {
   return https.post("/user/edit", params).then(res => {
     Message({
       type: res.code === "0" ? "success" : "error",
-      message: res.code === "0" ? "提交成功!" : res.message
+      message: res.code === "0" ? "编辑成功!" : res.message
     });
     return res.code === "0";
   });
 };
 
-/* 用户添加 */
+/* 用户搜索 */
 export const searchUser = params => {
-  return https.post("/user/userList", params).then(res => {
-    Message({
-      type: res.code === "0" ? "success" : "error",
-      message: res.code === "0" ? "提交成功!" : res.message
-    });
-    return res.code === "0";
+  return https.get("/user/userList", params).then(res => {
+    return res.data;
   });
 };

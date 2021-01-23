@@ -2,7 +2,7 @@
   <div>
     <!-- 添加考勤组弹框 -->
     <el-dialog
-      title="添加状态"
+      :title="Object.keys(editList).length > 0 ? '修改考勤组' : '添加考勤组'"
       :visible.sync="addDialog"
       width="50%"
       :before-close="handleClose"
@@ -13,24 +13,30 @@
         :rules="addRules"
         ref="addRef"
       >
-        <el-form-item label="考勤组名称:" prop="groupName">
+        <el-form-item label="考勤组名称:" prop="name">
           <el-input
             placeholder="请输入考勤组名称，1-10个字符"
             style="width:500px"
-            v-model="addGroup.groupName"
+            v-model="addGroup.name"
           ></el-input>
         </el-form-item>
-        <el-form-item label-width="110px" label="参与考勤人员:" prop="allName">
+        <el-form-item label-width="110px" label="参与考勤人员:" prop="userList">
           <el-button @click="addMan">{{ manNumber }}</el-button>
         </el-form-item>
-        <el-form-item label-width="85px" label="考勤类型:" prop="radio">
+        <el-form-item label-width="85px" label="考勤类型:" prop="chineseName">
           <div>
-            <el-radio v-model="addGroup.radio" @change="checkOne" label="1"
+            <el-radio
+              v-model="addGroup.chineseName"
+              @change="checkOne"
+              label="固定班制"
               >固定班制(每天考勤时间一样，适用于固定上班时间制的员工)</el-radio
             >
           </div>
           <div>
-            <el-radio v-model="addGroup.radio" @change="checkTwo" label="2"
+            <el-radio
+              v-model="addGroup.chineseName"
+              @change="checkTwo"
+              label="大小周制"
               >大小周制(适用于大小周工作制的员工)</el-radio
             >
           </div>
@@ -47,21 +53,27 @@
             <el-checkbox disabled label="星期五"></el-checkbox>
             <el-checkbox
               :disabled="
-                (addGroup.radio === '2' && addGroup.select[0] === '星期日') ||
-                  addGroup.radio === '1'
+                (addGroup.chineseName === '大小周制' &&
+                  addGroup.select[0] === '星期日') ||
+                  addGroup.radio === '固定周制'
               "
               label="星期六"
             ></el-checkbox>
             <el-checkbox
               :disabled="
-                (addGroup.radio === '2' && addGroup.select[0] === '星期六') ||
-                  addGroup.radio === '1'
+                (addGroup.chineseName === '大小周制' &&
+                  addGroup.select[0] === '星期六') ||
+                  addGroup.radio === '固定周制'
               "
               label="星期日"
             ></el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        <el-calendar v-show="addGroup.radio === '1'" v-model="yearData">
+        <!-- 日历显示 -->
+        <el-calendar
+          v-show="addGroup.chineseName === '固定班制'"
+          v-model="yearData"
+        >
           <template slot="dateCell" slot-scope="{ date, data }">
             <div
               style="background-color: #F0F0F0;width:100%;height:100%"
@@ -92,7 +104,10 @@
           </template>
         </el-calendar>
         <el-calendar
-          v-show="addGroup.select[0] === '星期日' && addGroup.radio === '2'"
+          v-show="
+            addGroup.select[0] === '星期日' &&
+              addGroup.chineseName === '大小周制'
+          "
           v-model="yearData"
         >
           <template slot="dateCell" slot-scope="{ date, data }">
@@ -181,7 +196,10 @@
           </template>
         </el-calendar>
         <el-calendar
-          v-show="addGroup.select[0] === '星期六' && addGroup.radio === '2'"
+          v-show="
+            addGroup.select[0] === '星期六' &&
+              addGroup.chineseName === '大小周制'
+          "
           v-model="yearData"
         >
           <template slot="dateCell" slot-scope="{ date, data }">
@@ -276,7 +294,11 @@
         <el-button @click="handleClose">取 消</el-button>
       </span>
     </el-dialog>
-    <addMan :addManDialog.sync="addManDialog" @addManClose="closeAddMan" />
+    <addMan
+      :userList="addGroup.userList"
+      :addManDialog.sync="addManDialog"
+      @addManClose="closeAddMan"
+    />
   </div>
 </template>
 
@@ -284,7 +306,7 @@
 import addMan from "@/components/groupDialog/addMan.vue";
 export default {
   components: { addMan },
-  props: ["addDialog"],
+  props: { addDialog: Boolean, editList: Object },
   data() {
     return {
       yearData: new Date(),
@@ -293,50 +315,80 @@ export default {
       addGroup: {
         groupName: "",
         allName: "",
-        radio: "",
+        chineseName: "",
         time: "",
+        userList: [],
         select: []
       },
       addRules: {
-        groupName: [
+        name: [
           { required: true, message: "请输入考勤组名称", trigger: "blur" }
         ],
         allName: [
           { required: true, message: "请选择参与考勤人员", trigger: "change" }
         ],
-        radio: [
+        chineseName: [
           { required: true, message: "请选择考勤类型", trigger: "change" }
         ],
         time: [
           { required: true, message: "请选择考勤时间段", trigger: "change" }
         ],
         select: [
-          { required: true, message: "请选择休息时间", trigger: "change" }
+          { required: true, message: "请选择休息时间", trigger: " blur" }
         ]
       }
     };
   },
+  watch: {
+    editList: {
+      handler(nVal) {
+        if (nVal && Object.keys(nVal).length > 0) {
+          this.addGroup.name = nVal.name;
+          this.addGroup.chineseName = nVal.chineseName;
+          this.addGroup.userList = nVal.userList;
+          if (nVal.offtype === "6,7") {
+            this.addGroup.select = ["星期六", "星期日"];
+          } else if (nVal.offtype === "6") {
+            this.addGroup.select = ["星期六"];
+          } else if (nVal.offtype === "7") {
+            this.addGroup.select = ["星期日"];
+          }
+        } else {
+          this.addGroup.name = "";
+          this.addGroup.chineseName = "";
+          this.addGroup.select = [];
+          this.addGroup.userList = [];
+        }
+      },
+      deep: true
+    }
+  },
   methods: {
+    // //   选中第一个单选框change事件
     checkOne() {
-      if (this.addGroup.radio === "1") {
+      if (this.addGroup.chineseName === "固定周制") {
         this.addGroup.select = ["星期六", "星期日"];
       }
     },
+    // 选中第二个单选框change事件
     checkTwo() {
-      if (this.addGroup.radio === "2") {
+      if (this.addGroup.chineseName === "大小周制") {
         this.addGroup.select = [];
       }
     },
+    // 关闭添加人员弹框
     closeAddMan() {
       this.addManDialog = false;
     },
+    // 关闭弹框
     handleClose() {
-      this.$refs.addRef.resetFields();
       this.$emit("update:addDialog", false);
     },
+    // 点击添加事件
     addBtn() {
       console.log(this.addGroup);
     },
+    // 添加人员框体
     addMan() {
       this.addManDialog = true;
     }

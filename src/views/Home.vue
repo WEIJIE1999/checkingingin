@@ -35,6 +35,11 @@
 
 <script>
 export default {
+  created() {
+    if (this.$router.history.current.path !== "/attendance/myAttendance") {
+      this.$router.replace("/attendance/myAttendance");
+    }
+  },
   methods: {
     myAttendance() {
       if (this.$router.history.current.path !== "/attendance/myAttendance") {

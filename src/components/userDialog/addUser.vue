@@ -1,7 +1,7 @@
 <template>
   <!-- 用户添加弹框 -->
   <el-dialog
-    :title="editList ? '编辑用户' : '添加用户'"
+    :title="Object.keys(editList).length > 0 ? '编辑用户' : '添加用户'"
     :visible.sync="addDialog"
     width="30%"
     :before-close="handleClose"

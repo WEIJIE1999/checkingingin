@@ -33,7 +33,8 @@
         <el-table-column prop="total" label="考勤人数"> </el-table-column>
         <el-table-column prop="chineseName" label="类型"> </el-table-column>
         <el-table-column prop="checkTime" label="考勤时间"></el-table-column>
-        <el-table-column prop="status" label="状态"> </el-table-column>
+        <el-table-column prop="status" label="状态" width="500px">
+        </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <!--修改按钮-->
@@ -47,7 +48,7 @@
                 type="primary"
                 icon="el-icon-edit"
                 size="mini"
-                @click="editDialog(scope.row.id)"
+                @click="editDialog(scope.row)"
               ></el-button>
             </el-tooltip>
             <!--删除按钮-->
@@ -81,17 +82,23 @@
       >
       </el-pagination>
     </el-card>
-    <addGroup :addDialog.sync="addDialog" @closeAdd="closeAdd" />
+    <addGroup
+      :editList="editList"
+      :addDialog.sync="addDialog"
+      @closeAdd="closeAdd"
+    />
   </div>
 </template>
 
 <script>
 import addGroup from "@/components/groupDialog/addGroup";
-import { getGroup } from "@/utils/request/group";
+import { getGroup, deleteGroup } from "@/utils/request/group";
 export default {
   components: { addGroup },
   data() {
     return {
+      // 修改列表
+      editList: {},
       // 考勤组表格
       groupList: [],
       // 数据表格是否操作完成
@@ -114,13 +121,15 @@ export default {
   },
   methods: {
     //   删除按钮
-    deleteById() {
+    deleteById(id) {
       this.$confirm("是否确定删除该考勤组？", "删除考勤组", {
         distinguishCancelAndClose: true,
         cancelButtonText: "取消",
         confirmButtonText: "确定"
       })
-        .then(() => {})
+        .then(async () => {
+          await deleteGroup({ id: id });
+        })
         .catch(() => {
           this.$message({
             type: "info",
@@ -153,6 +162,11 @@ export default {
     },
     addGroup() {
       this.addDialog = true;
+      this.editList = {};
+    },
+    editDialog(editList) {
+      this.addDialog = true;
+      this.editList = editList;
     }
   }
 };

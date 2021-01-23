@@ -215,11 +215,16 @@ export default {
     //   获取用户列表
     async getUser() {
       this.loading = true;
-      const data = await getUserList(this.queryInfo);
+      const data = await getUserList({
+        id: this.searchForm.id,
+        userName: this.searchForm.userName,
+        userPhone: this.searchForm.userPhone,
+        currPage: this.queryInfo.currPage,
+        pageSize: this.queryInfo.pageSize
+      });
       this.total = data.totalElements;
       this.userList = data.data;
       this.loading = false;
-      console.log(data);
     },
     //   监听弹框回调事件
     clickClose(val) {
@@ -262,14 +267,9 @@ export default {
     },
     // 搜索
     async search() {
-      const data = await getUserList({
-        id: this.searchForm.id,
-        userName: this.searchForm.userName,
-        userPhone: this.searchForm.userPhone,
-        currPage: 1,
-        pageSize: this.queryInfo.pageSize
-      });
-      this.userList = data.data;
+      this.queryInfo.currPage = 1;
+      this.getUser();
+      this.$message.success("搜索成功");
     }
   }
 };

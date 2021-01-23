@@ -218,33 +218,6 @@ export default {
     async getAttendanceList() {
       this.loading = true;
       const data = await getAttendanceList({
-        status: "",
-        startTime: "",
-        endtTime: "",
-        content: "",
-        currPage: this.queryInfo.currPage,
-        pageSize: this.queryInfo.pageSize
-      });
-      this.total = data.totalElement;
-      this.attendanceList = data.data;
-      this.loading = false;
-    },
-    // 监听 pagesize改变的事件
-    handleSizeChange(newSize) {
-      this.queryInfo.pageSize = newSize;
-      this.getAttendanceList();
-    },
-    // 监听页面值改变的事件
-    handleCurrentChange(newPage) {
-      this.queryInfo.currPage = newPage;
-      this.getAttendanceList();
-    },
-    // 搜索
-    async search() {
-      this.loading = true;
-      this.queryInfo.currPage = 1;
-      this.queryInfo.pageSize = 5;
-      const data = await getAttendanceList({
         status: this.searchform.status,
         startTime: this.searchform.theData[0]
           ? this.searchform.theData[0].getFullYear() +
@@ -276,8 +249,25 @@ export default {
         currPage: this.queryInfo.currPage,
         pageSize: this.queryInfo.pageSize
       });
+      this.total = data.totalElement;
       this.attendanceList = data.data;
       this.loading = false;
+    },
+    // 监听 pagesize改变的事件
+    handleSizeChange(newSize) {
+      this.queryInfo.pageSize = newSize;
+      this.getAttendanceList();
+    },
+    // 监听页面值改变的事件
+    handleCurrentChange(newPage) {
+      this.queryInfo.currPage = newPage;
+      this.getAttendanceList();
+    },
+    // 搜索
+    async search() {
+      this.queryInfo.currPage = 1;
+      this.getAttendanceList();
+      this.$message.success("搜索成功");
     },
     //   重置表单
     reset() {

@@ -5,6 +5,7 @@ import store from "./store";
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 import request from "./utils/https";
+// 弹框默认点击空白处无法关闭
 ElementUI.Dialog.props.closeOnClickModal.default = false;
 
 Vue.config.productionTip = false;
