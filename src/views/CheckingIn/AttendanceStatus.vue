@@ -48,10 +48,13 @@
         style="width: 100%"
         :default-sort="{ prop: 'date', order: 'descending' }"
       >
-        <el-table-column sortable prop="datee" label="序号"> </el-table-column>
-        <el-table-column prop="namee" label="状态名称"> </el-table-column>
-        <el-table-column prop="addresse" label="规则设置"> </el-table-column>
-        <el-table-column sortable prop="oute" label="添加时间">
+        <el-table-column sortable prop="id" label="序号"> </el-table-column>
+        <el-table-column prop="name" label="状态名称"> </el-table-column>
+        <el-table-column prop="explains" label="规则设置"> </el-table-column>
+        <el-table-column sortable prop="createTime" label="添加时间">
+          <template slot-scope="scope">{{
+            scope.row.createTime | dataFormat
+          }}</template>
         </el-table-column>
         <el-table-column label="操作" width="180px">
           <template slot-scope="scope">
@@ -77,7 +80,7 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="queryInfo.pageNum"
+        :current-page="queryInfo.currPage"
         :page-sizes="[5, 10, 15, 20]"
         :page-size="queryInfo.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
@@ -91,6 +94,7 @@
 </template>
 
 <script>
+import { getStatusList, deleteStautus } from "@/utils/request/status";
 import addStatus from "@/components/statusDialog/addStatus.vue";
 export default {
   components: { addStatus },
@@ -101,7 +105,7 @@ export default {
       // 获取用户列表的参数对象
       queryInfo: {
         // 当前的页数
-        pageNum: 1,
+        currPage: 1,
         pageSize: 5
       },
       //   考勤状态选择
@@ -120,16 +124,33 @@ export default {
     this.getStatus();
   },
   methods: {
+    //   关闭添加框
+    clickClose() {
+      this.addStatusVisible = false;
+      this.getStatus();
+    },
     //   搜索
-    search() {},
+    async search() {
+      this.loading = false;
+      const data = await getStatusList({
+        currPage: this.queryInfo.currPage,
+        pageSize: this.queryInfo.pageSize,
+        statusName: this.status
+      });
+      this.statusList = data.data;
+      this.$message.success("搜索成功");
+    },
     //   根据id删除
-    deleteById() {
+    deleteById(id) {
       this.$confirm("是否确定删除改考勤状态？", "删除状态", {
         distinguishCancelAndClose: true,
         cancelButtonText: "取消",
         confirmButtonText: "确定"
       })
-        .then(() => {})
+        .then(async () => {
+          await deleteStautus({ id: id });
+          this.getStatus();
+        })
         .catch(() => {
           this.$message({
             type: "info",
@@ -157,18 +178,18 @@ export default {
     },
     // 监听页面值改变的事件
     handleCurrentChange(newPage) {
-      this.queryInfo.pageNum = newPage;
+      this.queryInfo.currPage = newPage;
       this.this.getStatus();
     },
     // 获取表单数据
-    getStatus() {},
-    // 关闭删除弹框
-    clickClose(val) {
-      if (val === 2) {
-        this.deleteStatusVisible = false;
-      } else if (val === 1) {
-        this.addStatusVisible = false;
-      }
+    async getStatus() {
+      this.loading = true;
+      const data = await getStatusList({
+        currPage: this.queryInfo.currPage,
+        pageSize: this.queryInfo.pageSize
+      });
+      this.statusList = data.data;
+      this.loading = false;
     }
   }
 };

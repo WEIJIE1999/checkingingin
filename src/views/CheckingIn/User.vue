@@ -183,7 +183,6 @@ export default {
   methods: {
     //   输入框内容改变
     changeSearchContent() {
-      console.log(this.searchContent.select);
       if (this.searchContent.select === "id") {
         this.searchForm.id = this.searchContent.content;
         console.log(this.searchForm.id);

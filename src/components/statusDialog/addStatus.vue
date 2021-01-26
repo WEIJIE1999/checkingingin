@@ -18,11 +18,12 @@
           class="status"
           v-model="addStatus.statusName"
           placeholder="请选择"
+          @change="changeStatus"
         >
           <el-option label="签到正常" value="签到正常"></el-option>
           <el-option label="迟到" value="迟到"></el-option>
           <el-option label="早退" value="早退"></el-option>
-          <el-option label="迟到转事假" value="迟到转事件假"></el-option>
+          <el-option label="迟到转事假" value="迟到转事假"></el-option>
           <el-option label="签退正常" value="签退正常"></el-option>
           <el-option label="缺卡" value="缺卡"></el-option>
         </el-select>
@@ -85,6 +86,7 @@
 </template>
 
 <script>
+import { addStatus } from "@/utils/request/status";
 export default {
   props: ["addDialog"],
   data() {
@@ -94,6 +96,12 @@ export default {
         statusName: "",
         value: ""
       },
+      //   开始时间
+      frontTime: "",
+      //   结束时间
+      backTime: "",
+      //   规则描述
+      explains: "",
       //   添加状态规则
       addRules: {
         statusName: [
@@ -106,13 +114,74 @@ export default {
     };
   },
   methods: {
+    //   下拉框改变
+    changeStatus() {
+      this.addStatus.vlaue = "";
+    },
     //   关闭表单
     handleClose() {
       this.addStatus.statusName = "";
       this.$emit("update:addDialog", false);
     },
     // 添加按钮触发
-    addBtn() {}
+    addBtn() {
+      if (this.addStatus.statusName === "缺卡") {
+        this.explains = "无打卡记录";
+        this.addStatus.value = "无打卡记录";
+      } else if (
+        this.addStatus.statusName === "早退" ||
+        this.addStatus.statusName === "签到正常"
+      ) {
+        this.explains = `在${this.addStatus.value}之前打卡`;
+        this.frontTime = this.addStatus.value;
+      } else if (
+        this.addStatus.statusName === "迟到转事假" ||
+        this.addStatus.statusName === "签退正常"
+      ) {
+        this.explains = `在${this.addStatus.value}之后打卡`;
+        this.backTime = this.addStatus.value;
+      } else if (this.addStatus.statusName === "迟到") {
+        this.explains = `${(this.addStatus.value[0].getHours() + "").padStart(
+          2,
+          "0"
+        ) +
+          ":" +
+          (this.addStatus.value[0].getMinutes() + "").padStart(2, "0") +
+          ":" +
+          (this.addStatus.value[0].getSeconds() + "").padStart(2, "0")}至${(
+          this.addStatus.value[1].getHours() + ""
+        ).padStart(2, "0") +
+          ":" +
+          (this.addStatus.value[1].getMinutes() + "").padStart(2, "0") +
+          ":" +
+          (this.addStatus.value[1].getSeconds() + "").padStart(
+            2,
+            "0"
+          )}之间打卡`;
+        this.frontTime =
+          (this.addStatus.value[0].getHours() + "").padStart(2, "0") +
+          ":" +
+          (this.addStatus.value[0].getMinutes() + "").padStart(2, "0") +
+          ":" +
+          (this.addStatus.value[0].getSeconds() + "").padStart(2, "0");
+        this.backTime =
+          (this.addStatus.value[1].getHours() + "").padStart(2, "0") +
+          ":" +
+          (this.addStatus.value[1].getMinutes() + "").padStart(2, "0") +
+          ":" +
+          (this.addStatus.value[1].getSeconds() + "").padStart(2, "0");
+      }
+      this.$refs.addRef.validate(async valid => {
+        if (!valid) return;
+        await addStatus({
+          name: this.addStatus.statusName,
+          explains: this.explains,
+          frontTime: this.frontTime,
+          backTime: this.backTime
+        });
+      });
+      this.$emit("clickClose");
+    }
   }
 };
 </script>
