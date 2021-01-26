@@ -70,7 +70,7 @@
                 type="danger"
                 icon="el-icon-delete"
                 size="mini"
-                @click="deleteById(scope.row.id)"
+                @click="deleteById(scope.row)"
               ></el-button>
             </el-tooltip>
           </template>
@@ -141,14 +141,14 @@ export default {
       this.$message.success("搜索成功");
     },
     //   根据id删除
-    deleteById(id) {
+    deleteById(row) {
       this.$confirm("是否确定删除改考勤状态？", "删除状态", {
         distinguishCancelAndClose: true,
         cancelButtonText: "取消",
         confirmButtonText: "确定"
       })
         .then(async () => {
-          await deleteStautus({ id: id });
+          await deleteStautus({ id: row.id, version: row.version });
           this.getStatus();
         })
         .catch(() => {
