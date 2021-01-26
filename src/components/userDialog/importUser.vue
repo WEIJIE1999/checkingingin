@@ -12,7 +12,7 @@
       :rules="importRules"
       ref="addRef"
     >
-      <el-form-item label="导入用户:" prop="fileList">
+      <el-form-item ref="excel" label="导入用户:" prop="file">
         <el-upload
           class="avatar-uploader"
           ref="upload"
@@ -22,7 +22,9 @@
           :file-list="fileList"
           :on-change="handleChange"
           :on-error="errorUpload"
+          :show-file-list="false"
         >
+          <!-- 导入按钮 -->
           <el-button style="width:350px">{{ fileName }}</el-button>
         </el-upload>
       </el-form-item>
@@ -40,14 +42,15 @@ export default {
   data() {
     return {
       fileList: [],
+      //   导入按钮绑定名字
       importUser: {
-        importMan: ""
+        file: ""
       },
       //   文件名
       fileName: "点击选择文件",
       //   导入用户规则
       importRules: {
-        importMan: [{ required: true, message: "请导入文件", trigger: "blur" }]
+        file: [{ required: true, message: "请导入文件", trigger: "change" }]
       }
     };
   },
@@ -55,11 +58,17 @@ export default {
     //   关闭弹窗
     handleClose() {
       this.$emit("update:import-dialog", false);
+      this.fileList = [];
+      this.fileName = "点击选择文件";
     },
     // 确定按钮
     importBtn() {
-      this.$refs.upload.submit();
-      this.$emit("clickClose", 4);
+      this.$refs.addRef.validate(async valid => {
+        if (!valid) return;
+        this.$refs.upload.submit();
+        this.fileName = "点击选择文件";
+        this.$emit("clickClose", 4);
+      });
     },
     // 成功上传
     successUpload(response) {
@@ -67,14 +76,22 @@ export default {
         this.$message.success(
           `成功导入${response.data.success},失败导入${response.data.fail}`
         );
+        this.fileList = [];
+        this.fileName = "点击选择文件";
+        this.$refs.upload.clearFiles();
       }
     },
     // 筛选第一个选中文件
     handleChange(file, fileList) {
       if (fileList.length > 0) {
         this.fileList = [fileList[fileList.length - 1]]; // 这一步，是 展示最后一次选择的csv文件
+        fileList = this.importUser.importMan;
+        this.fileName = file.name;
+        this.importUser.file = fileList;
+        this.importUser.file = file;
       }
     },
+    // 上传失败回调
     errorUpload() {
       this.$message.error("上传失败");
     }

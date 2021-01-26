@@ -176,6 +176,7 @@ export default {
       deleteId: ""
     };
   },
+  //   初始化获取列表数据
   mounted() {
     this.getUser();
   },
@@ -196,6 +197,7 @@ export default {
     },
     //   删除用户
     deleteById(id) {
+      this.loading = true;
       this.$confirm("是否确定删除改用户？", "删除用户", {
         distinguishCancelAndClose: true,
         cancelButtonText: "取消",
@@ -210,6 +212,7 @@ export default {
             type: "info",
             message: "取消删除"
           });
+          this.loading = false;
         });
     },
     //   获取用户列表

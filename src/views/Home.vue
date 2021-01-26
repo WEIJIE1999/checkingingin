@@ -1,12 +1,14 @@
 <template>
   <div class="about">
     <el-container>
+      <!-- 页头 -->
       <el-header height="80px" class="header">
         <div>主页</div>
         <div>系统配置</div>
         <div>考勤管理</div>
       </el-header>
       <el-container>
+        <!-- 左侧 -->
         <el-aside width="200px">
           <el-menu default-active="1" style="width:190px;height:820px">
             <el-menu-item @click="myAttendance" index="1">
@@ -27,6 +29,7 @@
             </el-menu-item>
           </el-menu>
         </el-aside>
+        <!-- 内容区 -->
         <el-main><router-view /></el-main>
       </el-container>
     </el-container>
@@ -36,21 +39,25 @@
 <script>
 export default {
   created() {
+    //   刷新跳转到主页
     if (this.$router.history.current.path !== "/attendance/myAttendance") {
       this.$router.replace("/attendance/myAttendance");
     }
   },
   methods: {
+    //   跳转到我的考勤
     myAttendance() {
       if (this.$router.history.current.path !== "/attendance/myAttendance") {
         this.$router.push("/attendance/myAttendance");
       }
     },
+    // 跳转到用户管理
     user() {
       if (this.$router.history.current.path !== "/attendance/user") {
         this.$router.push("/attendance/user");
       }
     },
+    // 跳转到状态管理
     attendanceStatus() {
       if (
         this.$router.history.current.path !== "/attendance/attendanceStatus"
@@ -58,6 +65,7 @@ export default {
         this.$router.push("/attendance/attendanceStatus");
       }
     },
+    // 跳转到考勤组管理
     attendanceGroup() {
       if (this.$router.history.current.path !== "/attendance/attendanceGroup") {
         this.$router.push("/attendance/attendanceGroup");

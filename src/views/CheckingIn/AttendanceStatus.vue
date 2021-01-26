@@ -104,6 +104,7 @@ export default {
         pageNum: 1,
         pageSize: 5
       },
+      //   考勤状态选择
       status: "",
       //   数据操作loading效果
       loading: true,

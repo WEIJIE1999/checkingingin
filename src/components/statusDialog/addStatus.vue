@@ -106,10 +106,12 @@ export default {
     };
   },
   methods: {
+    //   关闭表单
     handleClose() {
       this.addStatus.statusName = "";
       this.$emit("update:addDialog", false);
     },
+    // 添加按钮触发
     addBtn() {}
   }
 };

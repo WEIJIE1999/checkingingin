@@ -82,6 +82,7 @@
       >
       </el-pagination>
     </el-card>
+    <!-- 增加弹框 -->
     <addGroup
       :editList="editList"
       :addDialog.sync="addDialog"
@@ -129,6 +130,7 @@ export default {
       })
         .then(async () => {
           await deleteGroup({ id: id });
+          this.getGroupList();
         })
         .catch(() => {
           this.$message({
@@ -157,13 +159,14 @@ export default {
     },
     // 关闭添加弹框
     closeAdd() {
-      this.addDialog = false;
       this.getGroupList();
     },
+    // 添加时候打开弹框
     addGroup() {
       this.addDialog = true;
       this.editList = {};
     },
+    // 修改时候打开弹框
     editDialog(editList) {
       this.addDialog = true;
       this.editList = editList;

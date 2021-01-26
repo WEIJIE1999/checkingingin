@@ -6,6 +6,7 @@
     width="30%"
     :before-close="handleClose"
   >
+    <!-- 添加表单 -->
     <el-form
       label-width="100px"
       :model="addUser"
@@ -59,6 +60,7 @@ export default {
     };
   },
   watch: {
+    //   监听prop的editList属性
     editList: {
       handler(nVal) {
         if (nVal && Object.keys(nVal).length > 0) {

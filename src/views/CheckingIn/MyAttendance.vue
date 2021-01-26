@@ -158,6 +158,7 @@ export default {
       total: 0,
       // 操作数据loading效果
       loading: true,
+      //   搜索表单数据
       searchform: {
         status: "",
         theData: "",
@@ -176,6 +177,7 @@ export default {
       }
     };
   },
+  //   初始化获取数据
   mounted() {
     this.getAttendanceList();
     this.getallList();
