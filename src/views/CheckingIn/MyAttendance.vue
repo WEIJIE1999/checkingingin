@@ -185,29 +185,32 @@ export default {
   methods: {
     //   添加考勤
     async addAttendanceBtn() {
-      this.$refs.addForm.validate(async valid => {
-        if (!valid) return;
-        await addAttendance({
-          userName: this.$refs.selectCh.selected.label,
-          userId: this.addForm.id,
-          checkTime: this.addForm.checkTime
-            ? this.addForm.checkTime.getFullYear() +
-              "-" +
-              (this.addForm.checkTime.getMonth() + 1 + "").padStart(2, "0") +
-              "-" +
-              (this.addForm.checkTime.getDate() + "").padStart(2, "0") +
-              " " +
-              (this.addForm.checkTime.getHours() + "").padStart(2, "0") +
-              ":" +
-              (this.addForm.checkTime.getMinutes() + "").padStart(2, "0") +
-              ":" +
-              (this.addForm.checkTime.getSeconds() + "").padStart(2, "0")
-            : ""
+      if (this.addForm.checkTime < new Date()) {
+        this.$refs.addForm.validate(async valid => {
+          if (!valid) return;
+          await addAttendance({
+            userName: this.$refs.selectCh.selected.label,
+            userId: this.addForm.id,
+            checkTime: this.addForm.checkTime
+              ? this.addForm.checkTime.getFullYear() +
+                "-" +
+                (this.addForm.checkTime.getMonth() + 1 + "").padStart(2, "0") +
+                "-" +
+                (this.addForm.checkTime.getDate() + "").padStart(2, "0") +
+                " " +
+                (this.addForm.checkTime.getHours() + "").padStart(2, "0") +
+                ":" +
+                (this.addForm.checkTime.getMinutes() + "").padStart(2, "0") +
+                ":" +
+                (this.addForm.checkTime.getSeconds() + "").padStart(2, "0")
+              : ""
+          });
+          this.DialogAdd = false;
+          this.$refs.addForm.resetFields();
+          this.getAttendanceList();
         });
-        this.DialogAdd = false;
-        this.$refs.addForm.resetFields();
-        this.getAttendanceList();
-      });
+      } else this.$message.error("打卡时间不能超过现在的时间");
+      this.DialogAdd = false;
     },
     //   获取全部成员
     async getallList() {
@@ -273,7 +276,10 @@ export default {
     },
     //   重置表单
     reset() {
+      this.queryInfo.currPage = 1;
+      this.queryInfo.pageSize = 5;
       this.$refs.searchform.resetFields();
+      this.getAttendanceList();
     },
     // 关闭弹框重置
     handleClose() {

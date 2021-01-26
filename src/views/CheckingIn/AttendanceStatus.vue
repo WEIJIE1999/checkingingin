@@ -160,7 +160,10 @@ export default {
     },
     //   重置按钮
     reset() {
+      this.queryInfo.currPage = 1;
+      this.queryInfo.pageSize = 5;
       this.status = "";
+      this.getStatus();
     },
     //   监听全部弹窗点击事件
     onDialog(type) {

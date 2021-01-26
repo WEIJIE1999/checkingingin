@@ -264,8 +264,14 @@ export default {
 
     // 重置表单
     reset() {
+      this.queryInfo.currPage = 1;
+      this.queryInfo.pageSize = 5;
       this.searchContent.content = "";
       this.searchContent.select = "";
+      this.searchForm.userName = "";
+      this.searchForm.userPhone = "";
+      this.searchForm.id = "";
+      this.getUser();
     },
     // 搜索
     async search() {
