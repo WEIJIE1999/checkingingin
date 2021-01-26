@@ -22,7 +22,7 @@
             <el-option label="签到正常" value="签到正常"></el-option>
             <el-option label="迟到" value="迟到"></el-option>
             <el-option label="早退" value="早退"></el-option>
-            <el-option label="迟到转事假" value="迟到转事件假"></el-option>
+            <el-option label="迟到转事假" value="迟到转事假"></el-option>
             <el-option label="签退正常" value="签退正常"></el-option>
             <el-option label="缺卡" value="缺卡"></el-option>
           </el-select>

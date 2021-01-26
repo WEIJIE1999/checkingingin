@@ -159,6 +159,7 @@ export default {
     },
     // 关闭添加弹框
     closeAdd() {
+      this.addDialog = false;
       this.getGroupList();
     },
     // 添加时候打开弹框

@@ -229,13 +229,15 @@ export default {
       this.loading = false;
     },
     //   监听弹框回调事件
-    clickClose(val) {
+    clickClose(val, tVal) {
       if (val === 1) {
         this.addUservisible = false;
         this.getUser();
       } else if (val === 4) {
         this.importUservisible = false;
-        this.getUser();
+        if (tVal === "0") {
+          this.getUser();
+        }
       }
     },
     // 监听点击弹框显示事件

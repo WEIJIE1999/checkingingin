@@ -46,6 +46,7 @@ export default {
       importUser: {
         file: ""
       },
+      code: "",
       //   文件名
       fileName: "点击选择文件",
       //   导入用户规则
@@ -67,7 +68,6 @@ export default {
         if (!valid) return;
         this.$refs.upload.submit();
         this.fileName = "点击选择文件";
-        this.$emit("clickClose", 4);
       });
     },
     // 成功上传
@@ -77,8 +77,10 @@ export default {
           `成功导入${response.data.success},失败导入${response.data.fail}`
         );
         this.fileList = [];
+        this.code = response.code;
         this.fileName = "点击选择文件";
         this.$refs.upload.clearFiles();
+        this.$emit("clickClose", 4, this.code);
       }
     },
     // 筛选第一个选中文件
