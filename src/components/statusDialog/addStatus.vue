@@ -30,7 +30,7 @@
       </el-form-item>
       <!-- 状态规则判断 -->
       <el-form-item label="状态规则:" prop="value">
-        <p v-show="this.addStatus.statusName === ''">-</p>
+        <p v-show="addStatus.statusName === ''">-</p>
         <el-time-picker
           v-show="this.addStatus.statusName === '迟到'"
           is-range
@@ -41,18 +41,18 @@
           placeholder="选择时间范围"
         >
         </el-time-picker>
-        <p v-show="this.addStatus.statusName === '缺卡'">无打卡记录</p>
+        <p v-show="addStatus.statusName === '缺卡'">无打卡记录</p>
         <div
           v-show="
-            this.addStatus.statusName === '早退' ||
-              this.addStatus.statusName === '签到正常'
+            addStatus.statusName === '早退' ||
+              addStatus.statusName === '签到正常'
           "
         >
           <span>在 </span>
           <el-time-select
             v-model="addStatus.value"
             :picker-options="{
-              step: '00:15'
+              step: '00:01'
             }"
             placeholder="选择时间"
           >
@@ -69,7 +69,7 @@
           <el-time-select
             v-model="addStatus.value"
             :picker-options="{
-              step: '00:15'
+              step: '00:01'
             }"
             placeholder="选择时间"
           >
@@ -107,16 +107,14 @@ export default {
         statusName: [
           { required: true, message: "请输入状态名称", trigger: "blur" }
         ],
-        value: [
-          { required: true, message: "请选择签到状态", trigger: "change" }
-        ]
+        value: [{ required: true, message: "请选择签到状态", trigger: "blur" }]
       }
     };
   },
   methods: {
     //   下拉框改变
     changeStatus() {
-      this.addStatus.vlaue = "";
+      this.addStatus.value = "";
     },
     //   关闭表单
     handleClose() {
