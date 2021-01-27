@@ -179,8 +179,8 @@ export default {
           frontTime: this.frontTime,
           backTime: this.backTime
         });
+        this.$emit("clickClose");
       });
-      this.$emit("clickClose");
     }
   }
 };

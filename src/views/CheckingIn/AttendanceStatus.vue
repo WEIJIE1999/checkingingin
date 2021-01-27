@@ -137,6 +137,7 @@ export default {
         pageSize: this.queryInfo.pageSize,
         statusName: this.status
       });
+      this.total = data.totalElements;
       this.statusList = data.data;
       this.$message.success("搜索成功");
     },
@@ -179,7 +180,7 @@ export default {
     // 监听页面值改变的事件
     handleCurrentChange(newPage) {
       this.queryInfo.currPage = newPage;
-      this.this.getStatus();
+      this.getStatus();
     },
     // 获取表单数据
     async getStatus() {
@@ -188,6 +189,7 @@ export default {
         currPage: this.queryInfo.currPage,
         pageSize: this.queryInfo.pageSize
       });
+      this.total = data.totalElements;
       this.statusList = data.data;
       this.loading = false;
     }
