@@ -66,12 +66,14 @@ export default {
       handler(nVal) {
         if (nVal && nVal.length > 0) {
           this.value = [];
+          this.defaultValue = [];
           for (let i = 0; i < nVal.length; i++) {
             this.value.push(nVal[i].id);
             this.defaultValue.push(nVal[i].id);
           }
         } else {
           this.value = [];
+          this.defaultValue = [];
         }
       }
     },
@@ -94,12 +96,11 @@ export default {
           groupId: this.groupId
         });
         if (JSON.stringify(data.ExitGroup) === JSON.stringify([])) {
+          this.$emit("clickClose", this.value, data.ExitGroup);
           //   清空左边搜索;
           this.$refs.myTransfer.$children["0"]._data.query = "";
           // 清空右边搜索
           this.$refs.myTransfer.$children["3"]._data.query = "";
-          this.$refs.myTransfer.$children["3"]._data.query = "";
-          this.$emit("clickClose", this.value, data.ExitGroup);
         } else {
           for (let i = 0; i < data.ExitGroup.length; i++) {
             this.alertContent.push(

@@ -26,6 +26,7 @@
             style="width:100px"
             placeholder="请选择"
             clearable
+            @change="changeSearchContent"
           >
             <el-option label="序号" value="id" />
             <el-option label="用户姓名" value="userName" />
@@ -189,15 +190,26 @@ export default {
     changeSearchContent() {
       if (this.searchContent.select === "id") {
         this.searchForm.id = this.searchContent.content;
+        this.theContent = "";
+        this.searchForm.userName = "";
+        this.searchForm.userPhone = "";
         console.log(this.searchForm.id);
       } else if (this.searchContent.select === "userName") {
         this.searchForm.userName = this.searchContent.content;
+        this.theContent = "";
+        this.searchForm.userPhone = "";
+        this.searchForm.id = "";
         console.log(this.searchForm.userName);
       } else if (this.searchContent.select === "userPhone") {
         this.searchForm.userPhone = this.searchContent.content;
+        this.theContent = "";
+        this.searchForm.id = "";
+        this.searchForm.userName = "";
         console.log(this.searchForm.userPhone);
       } else if (this.searchContent.select === "") {
         this.theContent = this.searchContent.content;
+        this.searchForm.id = "";
+        this.searchForm.userName = "";
       }
     },
     //   删除用户

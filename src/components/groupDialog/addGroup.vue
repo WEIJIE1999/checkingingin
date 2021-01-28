@@ -382,10 +382,6 @@ export default {
           this.addGroup.userList = nVal.userList;
           this.groupId = nVal.id;
           this.manNumber = `共${nVal.userList.length}人`;
-          for (let i = 0; i < nVal.userList.length; i++) {
-            this.value.push(nVal.userList[i].id);
-            this.addGroup.userId = this.value.join(",");
-          }
           if (nVal.offtype === "6,7") {
             this.addGroup.select = ["星期六", "星期日"];
           } else if (nVal.offtype === "6") {
@@ -430,9 +426,18 @@ export default {
     handleClose() {
       this.$emit("update:addDialog", false);
       this.$emit("update:loading", false);
+      this.value = [];
+      this.addGroup.userId = "";
+      this.manNumber = `共${this.userList.length}人`;
     },
     // 点击添加事件
     addBtn() {
+      if (this.addGroup.userId === "") {
+        for (let i = 0; i < this.addGroup.userList.length; i++) {
+          this.value.push(this.addGroup.userList.userList[i].id);
+          this.addGroup.userId = this.value.join(",");
+        }
+      }
       this.$refs.addRef.validate(async valid => {
         if (!valid) return;
         if (
