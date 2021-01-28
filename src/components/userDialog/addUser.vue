@@ -86,6 +86,7 @@ export default {
       //   this.$refs.addRef.resetFields();
       //   this.$emit("clickClose", 1);
       this.$emit("update:addDialog", false);
+      this.$emit("update:loading", false);
     },
     // 添加功能
     addBtn() {

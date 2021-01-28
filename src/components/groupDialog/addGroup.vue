@@ -218,7 +218,7 @@
                     date.getMonth() + 1 === 8 ||
                     date.getMonth() + 1 === 12 ||
                     date.getMonth() + 1 === 11) &&
-                  ((date.getDate() % 2 === 0 && date.getDay() === 0) ||
+                  ((date.getDate() % 2 === 1 && date.getDay() === 0) ||
                     date.getDay() === 6)
               "
             >
@@ -243,7 +243,7 @@
                     date.getMonth() + 1 === 6 ||
                     date.getMonth() + 1 === 9 ||
                     date.getMonth() + 1 === 10) &&
-                  ((date.getDate() % 2 === 1 && date.getDay() === 0) ||
+                  ((date.getDate() % 2 === 0 && date.getDay() === 0) ||
                     date.getDay() === 6)
               "
             >
