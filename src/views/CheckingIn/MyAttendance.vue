@@ -172,8 +172,10 @@ export default {
       },
       //   添加数据规则
       addRules: {
-        name: [{ required: true, message: "请选择人员", trigger: "blur" }],
-        data: [{ required: true, message: "请选择打卡时间", trigger: "blur" }]
+        id: [{ required: true, message: "请选择人员", trigger: "blur" }],
+        checkTime: [
+          { required: true, message: "请选择打卡时间", trigger: "blur" }
+        ]
       }
     };
   },
@@ -185,9 +187,9 @@ export default {
   methods: {
     //   添加考勤
     async addAttendanceBtn() {
-      if (this.addForm.checkTime < new Date()) {
-        this.$refs.addForm.validate(async valid => {
-          if (!valid) return;
+      this.$refs.addForm.validate(async valid => {
+        if (!valid) return;
+        if (this.addForm.checkTime < new Date()) {
           await addAttendance({
             userName: this.$refs.selectCh.selected.label,
             userId: this.addForm.id,
@@ -205,13 +207,12 @@ export default {
                 (this.addForm.checkTime.getSeconds() + "").padStart(2, "0")
               : ""
           });
-          this.DialogAdd = false;
-          this.$refs.addForm.resetFields();
-          this.getAttendanceList();
-        });
-      } else this.$message.error("打卡时间不能超过现在的时间");
-      this.DialogAdd = false;
-      this.loading = false;
+        } else this.$message.error("打卡时间不能超过现在的时间");
+        this.DialogAdd = false;
+        this.$refs.addForm.resetFields();
+        this.getAttendanceList();
+        this.loading = false;
+      });
     },
     //   获取全部成员
     async getallList() {
