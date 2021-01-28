@@ -17,6 +17,7 @@
       }"
       :data="userData"
       :titles="['选择框', '选中框']"
+      ref="myTransfer"
     >
     </el-transfer>
     <span slot="footer" class="dialog-footer"
@@ -93,6 +94,11 @@ export default {
           groupId: this.groupId
         });
         if (JSON.stringify(data.ExitGroup) === JSON.stringify([])) {
+          //   清空左边搜索;
+          this.$refs.myTransfer.$children["0"]._data.query = "";
+          // 清空右边搜索
+          this.$refs.myTransfer.$children["3"]._data.query = "";
+          this.$refs.myTransfer.$children["3"]._data.query = "";
           this.$emit("clickClose", this.value, data.ExitGroup);
         } else {
           for (let i = 0; i < data.ExitGroup.length; i++) {
@@ -111,6 +117,10 @@ export default {
           })
             .then(async () => {
               this.$emit("clickClose", this.value, data.ExitGroup);
+              //   清空左边搜索;
+              this.$refs.myTransfer.$children["0"]._data.query = "";
+              // 清空右边搜索
+              this.$refs.myTransfer.$children["3"]._data.query = "";
               this.alertContent = [];
             })
             .catch(() => {
@@ -127,6 +137,10 @@ export default {
     handleClose() {
       this.$emit("update:addManDialog", false);
       this.value = this.defaultValue;
+      //   清空左边搜索;
+      this.$refs.myTransfer.$children["0"]._data.query = "";
+      // 清空右边搜索
+      this.$refs.myTransfer.$children["3"]._data.query = "";
     }
   }
 };
