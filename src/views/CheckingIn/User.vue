@@ -175,7 +175,9 @@ export default {
       //   编辑信息
       editList: {},
       //   删除ID
-      deleteId: ""
+      deleteId: "",
+      //   没有选择下拉框时候
+      theContent: ""
     };
   },
   //   初始化获取列表数据
@@ -194,6 +196,8 @@ export default {
       } else if (this.searchContent.select === "userPhone") {
         this.searchForm.userPhone = this.searchContent.content;
         console.log(this.searchForm.userPhone);
+      } else if (this.searchContent.select === "") {
+        this.theContent = this.searchContent.content;
       }
     },
     //   删除用户
@@ -223,6 +227,7 @@ export default {
         id: this.searchForm.id,
         userName: this.searchForm.userName,
         userPhone: this.searchForm.userPhone,
+        content: this.theContent,
         currPage: this.queryInfo.currPage,
         pageSize: this.queryInfo.pageSize
       });
