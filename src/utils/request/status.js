@@ -16,10 +16,12 @@ export const getStatusList = (params = {}) => {
 /* 状态添加 */
 export const addStatus = params => {
   return https.post("/status/saveStatus", params).then(res => {
-    // Message({
-    //   type: res.code === "0" ? "success" : "error",
-    //   message: res.code === "0" ? "添加成功!" : res.message
-    // });
+    if (res.code === "0") {
+      Message({
+        type: res.code === "0" ? "success" : "error",
+        message: res.code === "0" ? "添加成功!" : res.message
+      });
+    }
     return res.code === "0";
   });
 };

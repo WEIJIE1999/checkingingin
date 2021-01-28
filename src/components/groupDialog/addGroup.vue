@@ -13,7 +13,7 @@
     >
       <!-- 表单 -->
       <el-form
-        label-width="100px"
+        label-width="110px"
         :model="addGroup"
         :rules="addRules"
         ref="addRef"
@@ -293,6 +293,9 @@
             </div>
           </template>
         </el-calendar>
+        <el-form-item label="考勤状态设置:" prop="status">
+          <p>根据已设置好的考勤状态执行。</p>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="addBtn">确 定</el-button>
@@ -344,7 +347,9 @@ export default {
         // 选中星期x
         select: [],
         // 冲突数组
-        conflict: []
+        conflict: [],
+        // 考勤状态
+        status: "1"
       },
       //   验证规则
       addRules: {
@@ -362,7 +367,8 @@ export default {
         ],
         select: [
           { required: true, message: "请选择休息时间", trigger: " blur" }
-        ]
+        ],
+        status: [{ required: true, message: "请选择状态", trigger: " blur" }]
       }
     };
   },

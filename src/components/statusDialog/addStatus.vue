@@ -177,6 +177,7 @@ export default {
           frontTime: this.frontTime,
           backTime: this.backTime
         });
+        this.addStatus.statusName = "";
         this.$emit("clickClose");
       });
     }
