@@ -301,13 +301,14 @@
         <el-button type="primary" @click="addBtn">确 定</el-button>
         <el-button @click="handleClose">取 消</el-button>
       </span>
+      <addMan
+        :userList="addGroup.userList"
+        :groupId="groupId"
+        :key="`addmain_${updateKey}`"
+        :addManDialog.sync="addManDialog"
+        @clickClose="clickClose"
+      />
     </el-dialog>
-    <addMan
-      :userList="addGroup.userList"
-      :groupId="groupId"
-      :addManDialog.sync="addManDialog"
-      @clickClose="clickClose"
-    />
   </div>
 </template>
 
@@ -319,6 +320,7 @@ export default {
   props: { addDialog: Boolean, editList: Object },
   data() {
     return {
+      updateKey: 0,
       // 日历绑定值
       yearData: new Date(),
       //   按钮文字显示
@@ -424,17 +426,18 @@ export default {
     },
     // 关闭弹框
     handleClose() {
+      this.updateKey++;
       this.$emit("update:addDialog", false);
       this.$emit("update:loading", false);
       this.value = [];
       this.addGroup.userId = "";
-      this.manNumber = `共${this.userList.length}人`;
+      this.manNumber = `共${this.addGroup.userList.length}人`;
     },
     // 点击添加事件
     addBtn() {
       if (this.addGroup.userId === "") {
         for (let i = 0; i < this.addGroup.userList.length; i++) {
-          this.value.push(this.addGroup.userList.userList[i].id);
+          this.value.push(this.addGroup.userList[i].id);
           this.addGroup.userId = this.value.join(",");
         }
       }

@@ -1,6 +1,8 @@
 <template>
   <!-- 选择人员弹框 -->
   <el-dialog
+    :append-to-body="true"
+    :modal-append-to-body="false"
     title="选择人员"
     :visible.sync="addManDialog"
     width="35%"
@@ -59,26 +61,25 @@ export default {
   //   初始化获取值
   mounted() {
     this.getUser();
-  },
-  watch: {
-    //   监听传进来的userList属性
-    userList: {
-      handler(nVal) {
-        if (nVal && nVal.length > 0) {
-          this.value = [];
-          this.defaultValue = [];
-          for (let i = 0; i < nVal.length; i++) {
-            this.value.push(nVal[i].id);
-            this.defaultValue.push(nVal[i].id);
-          }
-        } else {
-          this.value = [];
-          this.defaultValue = [];
-        }
+    if (this.userList && this.userList.length > 0) {
+      this.value = [];
+      this.defaultValue = [];
+      for (let i = 0; i < this.userList.length; i++) {
+        this.value.push(this.userList[i].id);
+        this.defaultValue.push(this.userList[i].id);
       }
-    },
-    deep: true
+    } else {
+      this.value = [];
+      this.defaultValue = [];
+    }
   },
+  //   watch: {
+  //     //   监听传进来的userList属性
+  //     userList: {
+  //       handler(nVal) {}
+  //     },
+  //     deep: true
+  //   },
   methods: {
     //   获取用户列表
     async getUser() {
@@ -118,6 +119,7 @@ export default {
           })
             .then(async () => {
               this.$emit("clickClose", this.value, data.ExitGroup);
+              this.defaultValue = this.value;
               //   清空左边搜索;
               this.$refs.myTransfer.$children["0"]._data.query = "";
               // 清空右边搜索
