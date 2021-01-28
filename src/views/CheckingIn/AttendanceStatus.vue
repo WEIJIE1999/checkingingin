@@ -89,7 +89,11 @@
       </el-pagination>
     </el-card>
     <!-- 添加状态弹框 -->
-    <addStatus :addDialog.sync="addStatusVisible" @clickClose="clickClose" />
+    <addStatus
+      :loading.sync="loading"
+      :addDialog.sync="addStatusVisible"
+      @clickClose="clickClose"
+    />
   </div>
 </template>
 
@@ -143,6 +147,7 @@ export default {
     },
     //   根据id删除
     deleteById(row) {
+      this.loading = true;
       this.$confirm("是否确定删除改考勤状态？", "删除状态", {
         distinguishCancelAndClose: true,
         cancelButtonText: "取消",
@@ -157,6 +162,7 @@ export default {
             type: "info",
             message: "取消删除"
           });
+          this.loading = false;
         });
     },
     //   重置按钮
@@ -171,6 +177,7 @@ export default {
       this.loading = false;
       switch (type) {
         case "addStatus":
+          this.loading = true;
           this.addStatusVisible = true;
           break;
       }

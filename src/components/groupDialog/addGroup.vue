@@ -429,6 +429,7 @@ export default {
     // 关闭弹框
     handleClose() {
       this.$emit("update:addDialog", false);
+      this.$emit("update:loading", false);
     },
     // 点击添加事件
     addBtn() {

@@ -211,6 +211,7 @@ export default {
         });
       } else this.$message.error("打卡时间不能超过现在的时间");
       this.DialogAdd = false;
+      this.loading = false;
     },
     //   获取全部成员
     async getallList() {
@@ -284,10 +285,12 @@ export default {
     // 关闭弹框重置
     handleClose() {
       this.$refs.addForm.resetFields();
+      this.loading = false;
     },
     // 点击打开弹框
     DialogAddVisible() {
       this.DialogAdd = true;
+      this.loading = true;
     }
   }
 };

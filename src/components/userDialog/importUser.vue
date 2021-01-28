@@ -59,6 +59,7 @@ export default {
     //   关闭弹窗
     handleClose() {
       this.$emit("update:import-dialog", false);
+      this.$emit("update:loading", false);
       this.fileList = [];
       this.fileName = "点击选择文件";
     },

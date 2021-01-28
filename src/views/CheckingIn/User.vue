@@ -124,12 +124,14 @@
     <addUser
       :editList="editList"
       :add-dialog.sync="addUservisible"
+      :loading.sync="loading"
       @clickClose="clickClose"
     />
     <!-- 导入用户弹框 -->
     <importUser
       :import-dialog.sync="importUservisible"
       @clickClose="clickClose"
+      :loading.sync="loading"
     />
   </div>
 </template>
@@ -230,6 +232,7 @@ export default {
     },
     //   监听弹框回调事件
     clickClose(val, tVal) {
+      this.loading = false;
       if (val === 1) {
         this.addUservisible = false;
         this.getUser();
@@ -245,10 +248,12 @@ export default {
       this.loading = false;
       switch (type) {
         case "addUser":
+          this.loading = true;
           this.editList = id || {};
           this.addUservisible = true;
           break;
         case "importUser":
+          this.loading = true;
           this.importUservisible = true;
           break;
       }

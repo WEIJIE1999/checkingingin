@@ -84,6 +84,7 @@
     </el-card>
     <!-- 增加弹框 -->
     <addGroup
+      :loading.sync="loading"
       :editList="editList"
       :addDialog.sync="addDialog"
       @closeAdd="closeAdd"
@@ -123,6 +124,7 @@ export default {
   methods: {
     //   删除按钮
     deleteById(id) {
+      this.loading = true;
       this.$confirm("是否确定删除该考勤组？", "删除考勤组", {
         distinguishCancelAndClose: true,
         cancelButtonText: "取消",
@@ -137,6 +139,7 @@ export default {
             type: "info",
             message: "取消删除"
           });
+          this.loading = false;
         });
     },
     // 监听 pagesize改变的事件
@@ -165,11 +168,13 @@ export default {
     // 添加时候打开弹框
     addGroup() {
       this.addDialog = true;
+      this.loading = true;
       this.editList = {};
     },
     // 修改时候打开弹框
     editDialog(editList) {
       this.addDialog = true;
+      this.loading = true;
       this.editList = editList;
     }
   }

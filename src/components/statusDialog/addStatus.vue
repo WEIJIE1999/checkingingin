@@ -120,6 +120,7 @@ export default {
     handleClose() {
       this.addStatus.statusName = "";
       this.$emit("update:addDialog", false);
+      this.$emit("update:loading", false);
     },
     // 添加按钮触发
     addBtn() {
