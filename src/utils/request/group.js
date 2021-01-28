@@ -39,10 +39,12 @@ export const checkMan = (params = {}) => {
 /* 考勤组添加 */
 export const addGroup = params => {
   return https.post("/group/save", params).then(res => {
-    Message({
-      type: res.code === "0" ? "success" : "error",
-      message: res.code === "0" ? "添加成功!" : res.message
-    });
+    if (res.code === "0") {
+      Message({
+        type: res.code === "0" ? "success" : "error",
+        message: res.code === "0" ? "添加成功!" : res.message
+      });
+    }
     return res.code === "0";
   });
 };
@@ -50,10 +52,12 @@ export const addGroup = params => {
 /* 考勤组编辑 */
 export const editGroup = params => {
   return https.post("/group/edit", params).then(res => {
-    Message({
-      type: res.code === "0" ? "success" : "error",
-      message: res.code === "0" ? "编辑成功!" : res.message
-    });
+    if (res.code === "0") {
+      Message({
+        type: res.code === "0" ? "success" : "error",
+        message: res.code === "0" ? "编辑成功!" : res.message
+      });
+    }
     return res.code === "0";
   });
 };

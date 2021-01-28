@@ -280,7 +280,9 @@ export default {
     reset() {
       this.queryInfo.currPage = 1;
       this.queryInfo.pageSize = 5;
-      this.$refs.searchform.resetFields();
+      this.searchform.status = "";
+      this.searchform.theData = "";
+      this.searchform.content = "";
       this.getAttendanceList();
     },
     // 关闭弹框重置

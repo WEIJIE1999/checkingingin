@@ -16,10 +16,12 @@ export const getAttendanceList = (params = {}) => {
 /* 添加考勤 */
 export const addAttendance = (params = {}) => {
   return https.post("self/addUserCheck", params).then(res => {
-    Message({
-      type: res.code === "0" ? "success" : "error",
-      message: res.data
-    });
+    if (res.code === "0") {
+      Message({
+        type: res.code === "0" ? "success" : "error",
+        message: res.data
+      });
+    }
     return res.code === "0";
   });
 };
