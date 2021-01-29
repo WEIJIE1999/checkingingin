@@ -295,7 +295,7 @@ export default {
       this.searchForm.userName = "";
       this.searchForm.userPhone = "";
       this.searchForm.id = "";
-      this.content = "";
+      this.theContent = "";
       this.getUser();
     },
     // 搜索
