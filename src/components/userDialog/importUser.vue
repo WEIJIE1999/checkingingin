@@ -61,6 +61,7 @@ export default {
       this.$emit("update:import-dialog", false);
       this.fileList = [];
       this.fileName = "点击选择文件";
+      this.$refs["addRef"].clearValidate();
     },
     // 确定按钮
     importBtn() {

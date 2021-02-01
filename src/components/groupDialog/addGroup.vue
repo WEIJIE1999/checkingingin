@@ -434,6 +434,7 @@ export default {
       this.value = [];
       this.addGroup.userId = "";
       this.manNumber = `共${this.addGroup.userList.length}人`;
+      this.$refs["addRef"].clearValidate();
     },
     // 点击添加事件
     addBtn() {
