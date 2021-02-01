@@ -210,6 +210,7 @@ export default {
         this.theContent = this.searchContent.content;
         this.searchForm.id = "";
         this.searchForm.userName = "";
+        this.searchForm.userPhone = "";
       }
     },
     //   删除用户
