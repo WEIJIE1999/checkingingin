@@ -102,6 +102,8 @@ export default {
           this.$refs.myTransfer.$children["0"]._data.query = "";
           // 清空右边搜索
           this.$refs.myTransfer.$children["3"]._data.query = "";
+          this.value = [];
+          this.defaultValue = [];
         } else {
           for (let i = 0; i < data.ExitGroup.length; i++) {
             this.alertContent.push(

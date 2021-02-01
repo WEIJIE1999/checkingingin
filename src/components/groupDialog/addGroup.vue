@@ -60,7 +60,7 @@
               :disabled="
                 (addGroup.chineseName === '大小周制' &&
                   addGroup.select[0] === '星期日') ||
-                  addGroup.chineseName === '固定周制'
+                  addGroup.chineseName === '固定班制'
               "
               label="星期六"
             ></el-checkbox>
@@ -68,7 +68,7 @@
               :disabled="
                 (addGroup.chineseName === '大小周制' &&
                   addGroup.select[0] === '星期六') ||
-                  addGroup.chineseName === '固定周制'
+                  addGroup.chineseName === '固定班制'
               "
               label="星期日"
             ></el-checkbox>
@@ -391,6 +391,7 @@ export default {
           } else if (nVal.offtype === "7") {
             this.addGroup.select = ["星期日"];
           }
+          this.updateKey++;
         } else {
           this.addGroup.name = "";
           this.addGroup.chineseName = "";
