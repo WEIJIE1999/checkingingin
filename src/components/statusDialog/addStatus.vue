@@ -160,15 +160,11 @@ export default {
         this.frontTime =
           (this.addStatus.value[0].getHours() + "").padStart(2, "0") +
           ":" +
-          (this.addStatus.value[0].getMinutes() + "").padStart(2, "0") +
-          ":" +
-          (this.addStatus.value[0].getSeconds() + "").padStart(2, "0");
+          (this.addStatus.value[0].getMinutes() + "").padStart(2, "0");
         this.backTime =
           (this.addStatus.value[1].getHours() + "").padStart(2, "0") +
           ":" +
-          (this.addStatus.value[1].getMinutes() + "").padStart(2, "0") +
-          ":" +
-          (this.addStatus.value[1].getSeconds() + "").padStart(2, "0");
+          (this.addStatus.value[1].getMinutes() + "").padStart(2, "0");
       }
       this.$refs.addRef.validate(async valid => {
         if (!valid) return;
