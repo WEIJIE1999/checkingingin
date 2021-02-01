@@ -23,6 +23,7 @@
             placeholder="请输入考勤组名称，1-10个字符"
             style="width:500px"
             v-model="addGroup.name"
+            :disabled="addGroup.name === '默认考勤组' ? true : false"
           ></el-input>
         </el-form-item>
         <el-form-item label-width="110px" label="参与考勤人员:" prop="userId">
@@ -400,6 +401,7 @@ export default {
           this.groupId = null;
           this.manNumber = "请选择>";
           this.addGroup.userId = "";
+          this.updateKey++;
         }
       },
       deep: true
