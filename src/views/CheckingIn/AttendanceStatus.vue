@@ -147,13 +147,13 @@ export default {
     },
     //   根据id删除
     deleteById(row) {
-      this.loading = true;
       this.$confirm("是否确定删除改考勤状态？", "删除状态", {
         distinguishCancelAndClose: true,
         cancelButtonText: "取消",
         confirmButtonText: "确定"
       })
         .then(async () => {
+          this.loading = true;
           await deleteStautus({ id: row.id, version: row.version });
           this.getStatus();
         })
@@ -162,7 +162,6 @@ export default {
             type: "info",
             message: "取消删除"
           });
-          this.loading = false;
         });
     },
     //   重置按钮
@@ -177,7 +176,6 @@ export default {
       this.loading = false;
       switch (type) {
         case "addStatus":
-          this.loading = true;
           this.addStatusVisible = true;
           break;
       }

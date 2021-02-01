@@ -124,7 +124,6 @@ export default {
     handleClose() {
       this.addStatus.statusName = "";
       this.$emit("update:addDialog", false);
-      this.$emit("update:loading", false);
     },
     // 添加按钮触发
     addBtn() {
@@ -168,12 +167,14 @@ export default {
       }
       this.$refs.addRef.validate(async valid => {
         if (!valid) return;
+        this.$emit("update:loading", true);
         await addStatus({
           name: this.addStatus.statusName,
           explains: this.explains,
           frontTime: this.frontTime,
           backTime: this.backTime
         });
+        this.$emit("update:loading", false);
         this.addStatus.statusName = "";
         this.$emit("clickClose");
       });

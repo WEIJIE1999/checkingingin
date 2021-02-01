@@ -215,13 +215,13 @@ export default {
     },
     //   删除用户
     deleteById(id) {
-      this.loading = true;
       this.$confirm("是否确定删除改用户？", "删除用户", {
         distinguishCancelAndClose: true,
         cancelButtonText: "取消",
         confirmButtonText: "确定"
       })
         .then(async () => {
+          this.loading = true;
           await deleteUser({ id: id });
           this.getUser();
         })
@@ -230,7 +230,6 @@ export default {
             type: "info",
             message: "取消删除"
           });
-          this.loading = false;
         });
     },
     //   获取用户列表
@@ -266,12 +265,10 @@ export default {
       this.loading = false;
       switch (type) {
         case "addUser":
-          this.loading = true;
           this.editList = id || {};
           this.addUservisible = true;
           break;
         case "importUser":
-          this.loading = true;
           this.importUservisible = true;
           break;
       }

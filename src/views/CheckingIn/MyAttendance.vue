@@ -190,6 +190,7 @@ export default {
       this.$refs.addForm.validate(async valid => {
         if (!valid) return;
         if (this.addForm.checkTime < new Date()) {
+          this.loading = true;
           await addAttendance({
             userName: this.$refs.selectCh.selected.label,
             userId: this.addForm.id,
@@ -207,11 +208,11 @@ export default {
                 (this.addForm.checkTime.getSeconds() + "").padStart(2, "0")
               : ""
           });
+          this.loading = false;
         } else this.$message.error("打卡时间不能超过现在的时间");
         this.DialogAdd = false;
         this.$refs.addForm.resetFields();
         this.getAttendanceList();
-        this.loading = false;
       });
     },
     //   获取全部成员
@@ -288,12 +289,10 @@ export default {
     // 关闭弹框重置
     handleClose() {
       this.$refs.addForm.resetFields();
-      this.loading = false;
     },
     // 点击打开弹框
     DialogAddVisible() {
       this.DialogAdd = true;
-      this.loading = true;
     }
   }
 };

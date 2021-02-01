@@ -431,7 +431,6 @@ export default {
     handleClose() {
       this.updateKey++;
       this.$emit("update:addDialog", false);
-      this.$emit("update:loading", false);
       this.value = [];
       this.addGroup.userId = "";
       this.manNumber = `共${this.addGroup.userList.length}人`;
@@ -461,6 +460,7 @@ export default {
           this.offtype = "7";
         }
         if (this.editList && Object.keys(this.editList).length > 0) {
+          this.$emit("update:loading", true);
           await editGroup({
             name: this.addGroup.name,
             ids: this.addGroup.userId,
@@ -469,16 +469,19 @@ export default {
             id: this.editList.id,
             conflict: this.conflict
           });
+          this.$emit("update:loading", false);
           this.value = [];
           this.addGroup.userId = "";
           this.$emit("closeAdd");
         } else {
+          this.$emit("update:loading", true);
           await addGroup({
             name: this.addGroup.name,
             ids: this.addGroup.userId,
             offtype: this.offtype,
             conflict: this.conflict
           });
+          this.$emit("update:loading", false);
           this.value = [];
           this.addGroup.userId = "";
           this.$emit("closeAdd");

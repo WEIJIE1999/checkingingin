@@ -124,13 +124,13 @@ export default {
   methods: {
     //   删除按钮
     deleteById(id) {
-      this.loading = true;
       this.$confirm("是否确定删除该考勤组？", "删除考勤组", {
         distinguishCancelAndClose: true,
         cancelButtonText: "取消",
         confirmButtonText: "确定"
       })
         .then(async () => {
+          this.loading = true;
           await deleteGroup({ id: id });
           this.getGroupList();
         })
@@ -139,7 +139,6 @@ export default {
             type: "info",
             message: "取消删除"
           });
-          this.loading = false;
         });
     },
     // 监听 pagesize改变的事件
@@ -162,19 +161,16 @@ export default {
     },
     // 关闭添加弹框
     closeAdd() {
-      this.addDialog = false;
       this.getGroupList();
     },
     // 添加时候打开弹框
     addGroup() {
       this.addDialog = true;
-      this.loading = true;
       this.editList = {};
     },
     // 修改时候打开弹框
     editDialog(editList) {
       this.addDialog = true;
-      this.loading = true;
       this.editList = editList;
     }
   }

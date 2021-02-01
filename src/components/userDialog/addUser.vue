@@ -86,7 +86,6 @@ export default {
       //   this.$refs.addRef.resetFields();
       //   this.$emit("clickClose", 1);
       this.$emit("update:addDialog", false);
-      this.$emit("update:loading", false);
       this.$refs["addRef"].clearValidate();
     },
     // 添加功能
@@ -94,17 +93,21 @@ export default {
       this.$refs.addRef.validate(async valid => {
         if (!valid) return;
         if (this.editList && Object.keys(this.editList).length > 0) {
+          this.$emit("update:loading", true);
           await editUser({
             id: this.editList.id,
             userName: this.addUser.userName,
             userPhone: this.addUser.userPhone,
             version: this.editList.version
           });
+          this.$emit("update:loading", false);
           this.$emit("clickClose", 1);
           this.$refs.addRef.resetFields();
         } else {
+          this.$emit("update:loading", true);
           await addUser(this.addUser);
           this.$emit("clickClose", 1);
+          this.$emit("update:loading", false);
           this.$refs.addRef.resetFields();
         }
       });

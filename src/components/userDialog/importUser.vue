@@ -59,7 +59,6 @@ export default {
     //   关闭弹窗
     handleClose() {
       this.$emit("update:import-dialog", false);
-      this.$emit("update:loading", false);
       this.fileList = [];
       this.fileName = "点击选择文件";
     },
@@ -68,6 +67,7 @@ export default {
       this.$refs.addRef.validate(async valid => {
         if (!valid) return;
         this.$refs.upload.submit();
+        this.$emit("update:loading", true);
         this.fileName = "点击选择文件";
       });
     },
@@ -77,6 +77,7 @@ export default {
         this.$message.success(
           `成功导入${response.data.success},失败导入${response.data.fail}`
         );
+        this.$emit("update:loading", false);
         this.fileList = [];
         this.code = response.code;
         this.fileName = "点击选择文件";
