@@ -52,7 +52,9 @@
           <el-time-select
             v-model="addStatus.value"
             :picker-options="{
-              step: '00:01'
+              start: '0:00',
+              step: '00:01',
+              end: '24:00'
             }"
             placeholder="选择时间"
           >
@@ -69,7 +71,9 @@
           <el-time-select
             v-model="addStatus.value"
             :picker-options="{
-              step: '00:01'
+              start: '0:00',
+              step: '00:01',
+              end: '24:00'
             }"
             placeholder="选择时间"
           >
