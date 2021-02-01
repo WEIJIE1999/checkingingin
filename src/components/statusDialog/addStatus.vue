@@ -149,15 +149,11 @@ export default {
           "0"
         ) +
           ":" +
-          (this.addStatus.value[0].getMinutes() + "").padStart(2, "0") +
-          ":" +
-          (this.addStatus.value[0].getSeconds() + "").padStart(2, "0")}至${(
+          (this.addStatus.value[0].getMinutes() + "").padStart(2, "0")}至${(
           this.addStatus.value[1].getHours() + ""
         ).padStart(2, "0") +
           ":" +
-          (this.addStatus.value[1].getMinutes() + "").padStart(2, "0") +
-          ":" +
-          (this.addStatus.value[1].getSeconds() + "").padStart(
+          (this.addStatus.value[1].getMinutes() + "").padStart(
             2,
             "0"
           )}之间打卡`;
