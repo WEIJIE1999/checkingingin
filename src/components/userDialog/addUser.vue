@@ -87,6 +87,8 @@ export default {
       //   this.$emit("clickClose", 1);
       this.$emit("update:addDialog", false);
       this.$refs["addRef"].clearValidate();
+      this.addUser.userName = this.editList.userName;
+      this.addUser.userPhone = this.editList.userPhone;
     },
     // 添加功能
     addBtn() {

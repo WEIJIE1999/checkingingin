@@ -435,6 +435,18 @@ export default {
       this.addGroup.userId = "";
       this.manNumber = `共${this.addGroup.userList.length}人`;
       this.$refs["addRef"].clearValidate();
+      this.addGroup.name = this.editList.name;
+      this.addGroup.chineseName = this.editList.chineseName;
+      this.addGroup.userList = this.editList.userList;
+      this.groupId = this.editList.id;
+      this.manNumber = `共${this.editList.userList.length}人`;
+      if (this.editList.offtype === "6,7") {
+        this.addGroup.select = ["星期六", "星期日"];
+      } else if (this.editList.offtype === "6") {
+        this.addGroup.select = ["星期六"];
+      } else if (this.editList.offtype === "7") {
+        this.addGroup.select = ["星期日"];
+      }
     },
     // 点击添加事件
     addBtn() {
