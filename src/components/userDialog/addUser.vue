@@ -86,7 +86,10 @@ export default {
       //   this.$refs.addRef.resetFields();
       //   this.$emit("clickClose", 1);
       this.$emit("update:addDialog", false);
-      this.$refs["addRef"].clearValidate();
+      this.$nextTick(() => {
+        this.$refs["addRef"].clearValidate();
+      });
+
       this.addUser.userName = this.editList.userName;
       this.addUser.userPhone = this.editList.userPhone;
     },

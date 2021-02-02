@@ -7,7 +7,7 @@ import axios from 'axios'
 import qs from 'qs'
 import Message from 'element-ui/packages/message'
 
-axios.defaults.baseURL = 'http://3091m9d958.zicp.vip/check'
+axios.defaults.baseURL = 'http://30919ts958.picp.vip/check'
 axios.defaults.timeout = 300000
 /* axios.defaults.withCredentials = true
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest' */
